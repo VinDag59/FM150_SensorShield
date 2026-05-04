@@ -1,0 +1,7 @@
+Module: Serial_ASCII
+Platform: Renesas RA in e2studion with LLVM or GNU toolchain
+
+This module is licensed to be used as required with the following requirements:
+
+1) The module must include all files including manifest, readme, and license files.
+

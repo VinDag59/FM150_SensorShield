@@ -4,12 +4,16 @@
 #if VECTOR_DATA_IRQ_COUNT > 0
         BSP_DONT_REMOVE const fsp_vector_t g_vector_table[BSP_ICU_VECTOR_NUM_ENTRIES] BSP_PLACE_IN_SECTION(BSP_SECTION_APPLICATION_VECTORS) =
         {
-                        [40] = uarta_txi_isr, /* UARTA0 TXI (UARTA0 transmission transfer end or buffer empty interrupt) */
+                        [23] = sau_spi_txrxi_isr, /* SAU0 SPI TXRXI11 (SAU UART RX 1/I2C 11/SPI 11) */
+            [26] = iica_master_txrxi_isr, /* IICA0 TXRXI (End of IICA0 communication) */
+            [40] = uarta_txi_isr, /* UARTA0 TXI (UARTA0 transmission transfer end or buffer empty interrupt) */
             [41] = uarta_rxi_isr, /* UARTA0 RXI (UARTA0 reception transfer end) */
         };
         #if BSP_FEATURE_ICU_HAS_IELSR
         const bsp_interrupt_event_t g_interrupt_event_link_select[BSP_ICU_VECTOR_NUM_ENTRIES] =
         {
+            [23] = BSP_PRV_VECT_ENUM(EVENT_SAU0_SPI_TXRXI11,GROUP7), /* SAU0 SPI TXRXI11 (SAU UART RX 1/I2C 11/SPI 11) */
+            [26] = BSP_PRV_VECT_ENUM(EVENT_IICA0_TXRXI,GROUP2), /* IICA0 TXRXI (End of IICA0 communication) */
             [40] = BSP_PRV_VECT_ENUM(EVENT_UARTA0_TXI,FIXED), /* UARTA0 TXI (UARTA0 transmission transfer end or buffer empty interrupt) */
             [41] = BSP_PRV_VECT_ENUM(EVENT_UARTA0_RXI,FIXED), /* UARTA0 RXI (UARTA0 reception transfer end) */
         };

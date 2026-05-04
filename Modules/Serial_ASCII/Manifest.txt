@@ -1,0 +1,29 @@
+Manifest File for SingleSerial Module using ASCII Protocol
+
+
+
+-------------------------------
+Module:
+
+Name: Serial port manager for a single UART
+Module Ver: 1.00
+Author: Vin D'Agositno
+Date: 28NOV2023
+Architecture: Renesas RA
+Toolchain: e2Studio LLVM or GNU
+
+
+-------------------------------
+Files:
+
+1) This manifext File
+2) Readme.txt
+3) SingleSerial.c
+4) SingleSerial.h
+5) SingleSerial_user.c
+6) SingleSerial_user.h
+7) ASCII_Numbers.c
+8) ASCII_Numbers.h
+9) License.txt
+
+

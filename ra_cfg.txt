@@ -81,24 +81,24 @@ FSP Configuration
     
   Pin Configurations
     FPB-RA0E1 -> g_bsp_pin_cfg
-      P008 30 GPIO LED1 - - "Output mode (Initial Low)" - - "ADC0: AN002" GREEN_ARDUINO_A4 IO - - 
+      P008 30 GPIO LED1 - - "Output mode (Initial High)" - - "ADC0: AN002" GREEN_ARDUINO_A4 IO - - 
       P009 29 GPIO LED2 - - "Output mode (Initial Low)" - - "ADC0: AN003" GREEN_PMOD1_CS3_GPIO10_ARDUINO_A3 IO - - 
       P010 32 SYSTEM_VREFH0 ARDUINO_AREF - - "Peripheral mode" - - "ADC0: AN000; SYSTEM: VREFH0" - IO - - 
-      P011 31 ADC0_AN001 ARDUINO_A5 - - "Analog mode" - - "ADC0: AN001; SYSTEM: VREFL0" - I - - 
+      P011 31 GPIO ARDUINO_A5 - - "Output mode (Initial High)" - - "ADC0: AN001; SYSTEM: VREFL0" - IO - - 
       P012 28 ADC0_AN004 PMOD1_CS2_GPIO9_ARDUINO_A2 - - "Analog mode" - - "ADC0: AN004" - I - - 
       P013 27 ADC0_AN005 PMOD1_RESET_ARDUINO_A1 - - "Analog mode" - - "ADC0: AN005" - I - - 
       P014 26 ADC0_AN006 PMOD2_GPIO8_ARDUINO_A0 - - "Analog mode" - - "ADC0: AN006" - I - - 
       P015 25 IRQ_IRQ1 PMOD2_INT - IRQ1 "IRQ mode" - - "ADC0: AN007; IRQ: IRQ1" - I - - 
       P100 24 GPIO PMOD1_MISO_RXD_ARDUINO_D4 - None "Input mode" - - "ADC0: AN022; IICA0: SCLA0; IRQ: IRQ2; SAU_I2C00: SDA00; SAU_SPI00: SI00; SAU_UART0: RXD0; TAU01: TI01; TAU01: TO01; TAU04: TI04; TAU04: TO04; UARTA: RXDA" - IO - - 
-      P101 23 GPIO PMOD1_MOSI_TXD_ARDUINO_D5 - None "Input mode" - - "ADC0: AN021; IICA0: SDAA0; IRQ: IRQ3; SAU_SPI00: SO00; SAU_UART0: TXD0; TAU00: TI00; TAU07: TI07; TAU07: TO07; UARTA: TXDA" - IO - - 
-      P102 22 GPIO PMOD1_SCK_RTS_ARDUINO_D6 - None "Input mode" - - "CGC: PCLBUZ0; IRQ: IRQ4; RTC: RTCOUT; SAU_I2C00: SCL00; SAU_SPI00: SCK00; TAU00: TO00; TAU06: TI06; TAU06: TO06" - IO - - 
+      P101 23 GPIO PMOD1_MOSI_TXD_ARDUINO_D5 - - "Output mode (Initial High)" - - "ADC0: AN021; IICA0: SDAA0; IRQ: IRQ3; SAU_SPI00: SO00; SAU_UART0: TXD0; TAU00: TI00; TAU07: TI07; TAU07: TO07; UARTA: TXDA" - IO - - 
+      P102 22 GPIO PMOD1_SCK_RTS_ARDUINO_D6 - - "Output mode (Initial High)" - - "CGC: PCLBUZ0; IRQ: IRQ4; RTC: RTCOUT; SAU_I2C00: SCL00; SAU_SPI00: SCK00; TAU00: TO00; TAU06: TI06; TAU06: TO06" - IO - - 
       P103 21 GPIO PMOD1_CS_CTS_ARDUINO_D7 - None "Input mode" - - "IRQ: IRQ5; SAU_SPI00: SSI00; TAU05: TI05; TAU05: TO05" - IO - - 
       P108 17 JTAG/SWD_SWDIO - - - "Peripheral mode" - - "JTAG/SWD: SWDIO; TAU03: TI03; TAU03: TO03" - IO - - 
-      P109 18 GPIO PMOD2_RESET_ARDUINO_D8 - None "Input mode" - - "IICA0: SDAA0; IRQ: IRQ4; SAU_SPI20: SO20; SAU_UART2: TXD2; TAU02: TI02; TAU02: TO02; UARTA: TXDA" - IO - - 
-      P110 19 GPIO PMOD2_SDA_ARDUINO_D9 - None "Input mode" - - "IICA0: SCLA0; IRQ: IRQ3; SAU_I2C20: SDA20; SAU_SPI20: SI20; SAU_UART2: RXD2; TAU01: TI01; TAU01: TO01; UARTA: RXDA" - IO - - 
-      P112 20 GPIO PMOD2_SCL_ARDUINO_D10 - None "Input mode" - - "IRQ: IRQ2; SAU_I2C20: SCL20; SAU_SPI00: SSI00; SAU_SPI20: SCK20; TAU03: TI03; TAU03: TO03" - IO - - 
+      P109 18 GPIO PMOD2_RESET_ARDUINO_D8 - - "Output mode (Initial High)" - - "IICA0: SDAA0; IRQ: IRQ4; SAU_SPI20: SO20; SAU_UART2: TXD2; TAU02: TI02; TAU02: TO02; UARTA: TXDA" - IO - - 
+      P110 19 GPIO PMOD2_SDA_ARDUINO_D9 - - "Output mode (Initial High)" - - "IICA0: SCLA0; IRQ: IRQ3; SAU_I2C20: SDA20; SAU_SPI20: SI20; SAU_UART2: RXD2; TAU01: TI01; TAU01: TO01; UARTA: RXDA" - IO - - 
+      P112 20 GPIO PMOD2_SCL_ARDUINO_D10 - - "Output mode (Initial High)" - - "IRQ: IRQ2; SAU_I2C20: SCL20; SAU_SPI00: SSI00; SAU_SPI20: SCK20; TAU03: TI03; TAU03: TO03" - IO - - 
       P200 15 IRQ_IRQ0 SW - IRQ0 "IRQ mode" - - "IRQ: IRQ0" ARDUINO_D2 I - - 
-      P201 14 GPIO PMOD1_INT_ARDUINO_D3 - None "Input mode" - - "CGC: PCLBUZ0; IRQ: IRQ5; RTC: RTCOUT; SAU_I2C11: SCL11; SAU_SPI00: SSI00; SAU_SPI11: SCK11; TAU05: TI05; TAU05: TO05" - IO - - 
+      P201 14 GPIO PMOD1_INT_ARDUINO_D3 - - "Output mode (Initial High)" - - "CGC: PCLBUZ0; IRQ: IRQ5; RTC: RTCOUT; SAU_I2C11: SCL11; SAU_SPI00: SSI00; SAU_SPI11: SCK11; TAU05: TI05; TAU05: TO05" - IO - - 
       P206 13 SYSTEM_RES RES - - "Peripheral mode" - - "SYSTEM: RES" ARDUINO_RESET IO - - 
       P207 12 UARTA_RXDA ARDUINO_RX - None "Peripheral mode" - - "IRQ: IRQ2; TAU00: TO00; UARTA: RXDA" - I - - 
       P208 11 UARTA_TXDA ARDUINO_TX - None "Peripheral mode" - - "IRQ: IRQ3; TAU00: TI00; UARTA: TXDA" - O - - 
@@ -108,8 +108,8 @@ FSP Configuration
       P215 2 CGC_XCIN - - - "Peripheral mode" - - "CGC: XCIN" - IO - - 
       P300 16 JTAG/SWD_SWCLK - - - "Peripheral mode" - - "JTAG/SWD: SWCLK; TAU04: TI04; TAU04: TO04" - IO - - 
       P407 8 SAU_SPI11_SCK11 ARDUINO_SCK - None "Peripheral mode" - - "CGC: PCLBUZ0; IRQ: IRQ4; RTC: RTCOUT; SAU_I2C11: SCL11; SAU_SPI11: SCK11" PMOD2_GPIO7 IO - - 
-      P913 10 GPIO PMOD2_GPIO10_ARDUINO_SDA - - "Input mode" - - "IICA0: SDAA0" - IO - - 
-      P914 9 GPIO PMOD2_GPIO9_ARDUINO_SCL - - "Input mode" - - "IICA0: SCLA0" - IO - - 
+      P913 10 IICA0_SDAA0 PMOD2_GPIO10_ARDUINO_SDA - - "Peripheral mode" - - "IICA0: SDAA0" - IO - - 
+      P914 9 IICA0_SCLA0 PMOD2_GPIO9_ARDUINO_SCL - - "Peripheral mode" - - "IICA0: SCLA0" - IO - - 
       VCC 7 SYSTEM_VCC - - - - - - - - IO "Read only" - 
       VCL 1 SYSTEM_VCL - - - - - - - - IO "Read only" - 
       VSS 4 SYSTEM_VSS - - - - - - - - IO "Read only" - 
@@ -117,21 +117,21 @@ FSP Configuration
       P008 30 - LED1 - - Disabled - - "ADC0: AN002" GREEN_ARDUINO_A4 IO - - 
       P009 29 - LED2 - - Disabled - - "ADC0: AN003" GREEN_PMOD1_CS3_GPIO10_ARDUINO_A3 IO - - 
       P010 32 - ARDUINO_AREF - - Disabled - - "ADC0: AN000; SYSTEM: VREFH0" - IO - - 
-      P011 31 - ARDUINO_A5 - - Disabled - - "ADC0: AN001; SYSTEM: VREFL0" - I - - 
+      P011 31 - ARDUINO_A5 - - Disabled - - "ADC0: AN001; SYSTEM: VREFL0" - IO - - 
       P012 28 - PMOD1_CS2_GPIO9_ARDUINO_A2 - - Disabled - - "ADC0: AN004" - I - - 
       P013 27 - PMOD1_RESET_ARDUINO_A1 - - Disabled - - "ADC0: AN005" - I - - 
       P014 26 - PMOD2_GPIO8_ARDUINO_A0 - - Disabled - - "ADC0: AN006" - I - - 
       P015 25 - PMOD2_INT - None Disabled - - "ADC0: AN007; IRQ: IRQ1" - I - - 
       P100 24 - PMOD1_MISO_RXD_ARDUINO_D4 - None Disabled - - "ADC0: AN022; IICA0: SCLA0; IRQ: IRQ2; SAU_I2C00: SDA00; SAU_SPI00: SI00; SAU_UART0: RXD0; TAU01: TI01; TAU01: TO01; TAU04: TI04; TAU04: TO04; UARTA: RXDA" - IO - - 
-      P101 23 - PMOD1_MOSI_TXD_ARDUINO_D5 - None Disabled - - "ADC0: AN021; IICA0: SDAA0; IRQ: IRQ3; SAU_SPI00: SO00; SAU_UART0: TXD0; TAU00: TI00; TAU07: TI07; TAU07: TO07; UARTA: TXDA" - IO - - 
-      P102 22 - PMOD1_SCK_RTS_ARDUINO_D6 - None Disabled - - "CGC: PCLBUZ0; IRQ: IRQ4; RTC: RTCOUT; SAU_I2C00: SCL00; SAU_SPI00: SCK00; TAU00: TO00; TAU06: TI06; TAU06: TO06" - IO - - 
+      P101 23 - PMOD1_MOSI_TXD_ARDUINO_D5 - - Disabled - - "ADC0: AN021; IICA0: SDAA0; IRQ: IRQ3; SAU_SPI00: SO00; SAU_UART0: TXD0; TAU00: TI00; TAU07: TI07; TAU07: TO07; UARTA: TXDA" - IO - - 
+      P102 22 - PMOD1_SCK_RTS_ARDUINO_D6 - - Disabled - - "CGC: PCLBUZ0; IRQ: IRQ4; RTC: RTCOUT; SAU_I2C00: SCL00; SAU_SPI00: SCK00; TAU00: TO00; TAU06: TI06; TAU06: TO06" - IO - - 
       P103 21 - PMOD1_CS_CTS_ARDUINO_D7 - None Disabled - - "IRQ: IRQ5; SAU_SPI00: SSI00; TAU05: TI05; TAU05: TO05" - IO - - 
       P108 17 JTAG/SWD_SWDIO - - - "Peripheral mode" - - "JTAG/SWD: SWDIO; TAU03: TI03; TAU03: TO03" - IO - - 
-      P109 18 - PMOD2_RESET_ARDUINO_D8 - None Disabled - - "IICA0: SDAA0; IRQ: IRQ4; SAU_SPI20: SO20; SAU_UART2: TXD2; TAU02: TI02; TAU02: TO02; UARTA: TXDA" - IO - - 
-      P110 19 - PMOD2_SDA_ARDUINO_D9 - None Disabled - - "IICA0: SCLA0; IRQ: IRQ3; SAU_I2C20: SDA20; SAU_SPI20: SI20; SAU_UART2: RXD2; TAU01: TI01; TAU01: TO01; UARTA: RXDA" - IO - - 
-      P112 20 - PMOD2_SCL_ARDUINO_D10 - None Disabled - - "IRQ: IRQ2; SAU_I2C20: SCL20; SAU_SPI00: SSI00; SAU_SPI20: SCK20; TAU03: TI03; TAU03: TO03" - IO - - 
+      P109 18 - PMOD2_RESET_ARDUINO_D8 - - Disabled - - "IICA0: SDAA0; IRQ: IRQ4; SAU_SPI20: SO20; SAU_UART2: TXD2; TAU02: TI02; TAU02: TO02; UARTA: TXDA" - IO - - 
+      P110 19 - PMOD2_SDA_ARDUINO_D9 - - Disabled - - "IICA0: SCLA0; IRQ: IRQ3; SAU_I2C20: SDA20; SAU_SPI20: SI20; SAU_UART2: RXD2; TAU01: TI01; TAU01: TO01; UARTA: RXDA" - IO - - 
+      P112 20 - PMOD2_SCL_ARDUINO_D10 - - Disabled - - "IRQ: IRQ2; SAU_I2C20: SCL20; SAU_SPI00: SSI00; SAU_SPI20: SCK20; TAU03: TI03; TAU03: TO03" - IO - - 
       P200 15 - SW - None Disabled - - "IRQ: IRQ0" ARDUINO_D2 I - - 
-      P201 14 - PMOD1_INT_ARDUINO_D3 - None Disabled - - "CGC: PCLBUZ0; IRQ: IRQ5; RTC: RTCOUT; SAU_I2C11: SCL11; SAU_SPI00: SSI00; SAU_SPI11: SCK11; TAU05: TI05; TAU05: TO05" - IO - - 
+      P201 14 - PMOD1_INT_ARDUINO_D3 - - Disabled - - "CGC: PCLBUZ0; IRQ: IRQ5; RTC: RTCOUT; SAU_I2C11: SCL11; SAU_SPI00: SSI00; SAU_SPI11: SCK11; TAU05: TI05; TAU05: TO05" - IO - - 
       P206 13 - RES - - Disabled - - "SYSTEM: RES" ARDUINO_RESET IO - - 
       P207 12 - ARDUINO_RX - None Disabled - - "IRQ: IRQ2; TAU00: TO00; UARTA: RXDA" - I - - 
       P208 11 - ARDUINO_TX - None Disabled - - "IRQ: IRQ3; TAU00: TI00; UARTA: TXDA" - O - - 
@@ -166,6 +166,20 @@ FSP Configuration
     DTC Support: Disable
     Receive Error Interrupt Mode: Enabled
     
+  Module "IICA Master (r_iica_master)"
+    Parameter Checking: Default (BSP)
+    10-bit slave addressing: Disabled
+    Enable Single Channel: Enabled
+    
+  Module "SPI (r_sau_spi)"
+    Parameter Checking: Default (BSP)
+    Critical Section Guarding: Disabled
+    Enable Single Channel: Disabled
+    Transfer Operating Mode: Transmission/Reception
+    DTC Support: Disabled
+    Multiple Slave Compatibility Mode: Disabled
+    Continuous Transfer Mode: Enabled
+    
   HAL
     Instance "g_ioport I/O Port (r_ioport)"
       Name: g_ioport
@@ -189,4 +203,31 @@ FSP Configuration
       Interrupts: Receive Interrupt Priority: Priority 2
       Interrupts: Transmit Interrupt Priority: Priority 2
       Interrupts: Error Interrupt Priority: Disabled
+      
+    Instance "g_iica_master0 IICA Master (r_iica_master)"
+      Name: g_iica_master0
+      Channel: 0
+      Rate: Standard
+      Custom Rate (bps): 0
+      Signal Rising Time (us): 0
+      Signal Falling Time (us): 0
+      Duty Cycle (%): 53
+      Digital Filter: Disabled
+      Address Mode: 7-Bit
+      Slave Address: 0x00
+      Callback: iica_master_callback
+      Interrupt Priority Level: Priority 2
+      
+    Instance "g_spi0 SPI (r_sau_spi)"
+      Name: g_spi0
+      Channel: 11
+      Operating Mode: Master
+      Operation Clock: CKm0
+      Transfer Mode : Single transfer mode
+      Bit Order: MSB First
+      Data Phase: Data sampling on odd edge, data variation on even edge
+      Clock Phase: High when idle
+      Bitrate: 500000
+      Callback: sau_spi_callback
+      Transmit End Interrupt Priority: Priority 2
       

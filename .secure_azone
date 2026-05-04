@@ -44,7 +44,10 @@
             <slot name="P914.CM23" secure="false"/>
         </peripheral>
         <peripheral name="UARTA0.CM23" group="UARTA" security=""/>
+        <peripheral name="IICA0.CM23" group="IICA" security=""/>
         <peripheral name="ICU.CM23">
+            <slot name="IRQ23.CM23" secure="false"/>
+            <slot name="IRQ26.CM23" secure="false"/>
             <slot name="IRQ40.CM23" secure="false"/>
             <slot name="IRQ41.CM23" secure="false"/>
         </peripheral>

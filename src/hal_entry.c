@@ -5,10 +5,94 @@
 */
 
 #include "hal_data.h"
+#include "Project.h"
+#include "Serial_user.h"
+#include "ASCII_numbers.h"
+#include "Scheduler.h"
+#include "SensorFunctions.h"
+#include "SimpleKeyboard_User.h"
+
 
 void R_BSP_WarmStart(bsp_warm_start_event_t event);
+void i2c_master_callback(i2c_master_callback_args_t *p_args);
+void sau_spi_callback(spi_callback_args_t *p_args);
 
-extern bsp_leds_t g_bsp_leds;
+
+
+//-----------------------------
+    // *** Variable Definitions ***
+    // File Scope Variables
+    bsp_io_level_t pin_level = BSP_IO_LEVEL_LOW; /* Holds level to set for pins */
+
+    sensor_data_t pressureSensor;
+    sensor_data_t temperatureSensor;
+    sensor_data_t humiditySensor;
+    uint8_t nozzleNo = 12;
+
+    sensor_obj_t pressureSensorObj = {.pSensorData = &pressureSensor, .sineOffset = 10};
+    sensor_obj_t temperatureSensorObj = {.pSensorData = &temperatureSensor, .sineOffset = 50};
+    sensor_obj_t humiditySensorObj = {.pSensorData = &humiditySensor, .sineOffset = 90};
+
+    const sensor_data_t initValues1 = {.byteAccess ={1,0, 1,0, 1,0, 1,0, 1,0, 1,0, 1,0, 1,0,  8,0,0,0, 1,0, 0}};
+    const sensor_data_t initValues2 = {.byteAccess ={2,0, 2,0, 2,0, 2,0, 2,0, 2,0, 2,0, 2,0, 16,0,0,0, 2,0, 0}};
+    const sensor_data_t initValues3 = {.byteAccess ={3,0, 3,0, 3,0, 3,0, 3,0, 3,0, 3,0, 3,0, 24,0,0,0, 3,0, 0}};
+
+    uint8_t sensorStateMachine = 0;
+
+    uint8_t testPacket[] = "$R1123:456:789:135:248:369\n";
+    uint16_t testUINT16Array[6];
+
+    uint8_t volatile flashEnabled = true;
+    uint16_t volatile flashDelaySeed = 10;
+    uint16_t flashCounter = 10;
+
+    uint8_t buttonPushed = false;
+    uint8_t volatile keyCode = NO_KEY_PRESSED;
+
+    fsp_err_t status = FSP_SUCCESS;
+
+
+
+    // variables for I2C
+    fsp_err_t err     = FSP_SUCCESS;
+    // Sensor
+    static volatile i2c_master_event_t i2c_event = I2C_MASTER_EVENT_ABORTED;
+    #define SENSOR_I2C_BUS_ADDRESS 0x44
+    uint8_t sensorRegisters[6];
+    const uint8_t cmdRead[2] = {0x24,0x16}; // read temp/hum in Low repeatibility and no clock stretching
+    //const uint8_t cmdRead[2] = {0x24,0x0B}; // read temp/hum in Med repeatibility and no clock stretching
+    uint8_t getTempHum = false;
+    uint8_t getTempHumState = 0;
+    uint8_t currentTempF = 40;
+    uint8_t currentHum = 10;
+    // EEProm
+    #define EEPROM_I2C_BUS_ADDRESS 0x50
+    uint8_t readEEPROM = false;
+    uint8_t writeEEPROM = false;
+    uint8_t readEEpromValues[8] = {0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA};
+    uint8_t writeEEpromValues[8];
+    uint8_t readWriteStartingRegister[2];
+    uint8_t eepromReadWriteState = 0;
+    uint8_t noBytestoRW = 4;
+    volatile uint8_t i2cBusy = false;
+
+    // SPI stuff
+    // DLHR Sensors
+    uint8_t spiCmdStartSingle[3] = {0xAA, 0x00, 0x00};
+    uint8_t spiCmdReadValue[7] = {0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    volatile uint8_t sampleData_DLHR = false;
+    // Barometric Sensor
+    uint8_t spiCmdGetBarometricPressure[2] = {0x20, 0x00};
+    volatile uint8_t sampleData_Barometer = false;
+    spi_cfg_t bar_spi0_cfg;// = g_spi0_cfg;
+
+
+    // General
+    uint8_t spiReadSensorData[7] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    uint8_t sensorSampleState = 0;
+
+
+
 
 /*******************************************************************************************************************//**
  * @brief  Blinky example application
@@ -18,80 +102,355 @@ extern bsp_leds_t g_bsp_leds;
  **********************************************************************************************************************/
 void hal_entry (void)
 {
-#if BSP_TZ_SECURE_BUILD
+//    /* Define the units to be used with the software delay function */
+//    const bsp_delay_units_t bsp_delay_units = BSP_DELAY_UNITS_MILLISECONDS;
+//
+//    /* Set the blink frequency (must be <= bsp_delay_units / 2) */
+//    const uint32_t freq_in_hz = 1;
+//
+//    /* Calculate the delay in terms of bsp_delay_units */
+//    const uint32_t delay = bsp_delay_units / (freq_in_hz * 2);
 
-    /* Enter non-secure code */
-    R_BSP_NonSecureEnter();
-#endif
 
-    /* Define the units to be used with the software delay function */
-    const bsp_delay_units_t bsp_delay_units = BSP_DELAY_UNITS_MILLISECONDS;
 
-    /* Set the blink frequency (must be <= bsp_delay_units / 2) */
-    const uint32_t freq_in_hz = 1;
+    // -----------------------------------------
+    // Set up peripherals
+    // Give me a SysTick every 1mS
+    SysTick_Config (SystemCoreClock / 1000);
 
-    /* Calculate the delay in terms of bsp_delay_units */
-    const uint32_t delay = bsp_delay_units / (freq_in_hz * 2);
 
-    /* LED type structure */
-    bsp_leds_t leds = g_bsp_leds;
+    // Start the UART
+    R_UARTA_Open(&g_uart0_ctrl, &g_uart0_cfg);
 
-    /* Wake up 2nd core if this is first core and we are inside a multicore project. */
-#if (0 == _RA_CORE) && (1 == BSP_MULTICORE_PROJECT)
-    R_BSP_SecondaryCoreStart();
-#endif
+    // Start I2C
+    err = R_IICA_MASTER_Open(&g_iica_master0_ctrl, &g_iica_master0_cfg);
 
-    /* If this board has no LEDs then trap here */
-    if (0 == leds.led_count)
-    {
-        while (1)
-        {
-            ;                          // There are no LEDs on this board
-        }
-    }
+    // Start SPI
+    status = R_SAU_SPI_Open(&g_spi0_ctrl, &g_spi0_cfg);
+    memcpy(&bar_spi0_cfg, &g_spi0_cfg, sizeof(g_spi0_cfg));
+    bar_spi0_cfg.clk_phase = SPI_CLK_PHASE_EDGE_EVEN;
 
-    /* Holds level to set for pins */
-    bsp_io_level_t pin_level = BSP_IO_LEVEL_LOW;
+
+    // UART Hello World, so to speak
+    SendString(DEFAULT_MODEL_NAME, (uint16_t)strlen(DEFAULT_MODEL_NAME), StripZeros, NoAddCRLF);
+    SendString(FW_REV_PACKET_BUILT, (uint16_t)strlen(FW_REV_PACKET_BUILT), StripZeros, NoAddCRLF);
+    SendString(FW_REV__BUILT, (uint16_t)strlen(FW_REV__BUILT), StripZeros, NoAddCRLF);
+
+
+    InitSensor(&pressureSensor, &initValues1);
+    InitSensor(&temperatureSensor, &initValues2);
+    InitSensor(&humiditySensor, &initValues3);
+
+    ParseParamsToUINT16(&testPacket[3], testUINT16Array, 6);
 
     while (1)
     {
-        /* Enable access to the PFS registers. If using r_ioport module then register protection is automatically
-         * handled. This code uses BSP IO functions to show how it is used.
-         */
-        R_BSP_PinAccessEnable();
+        //---------------------------------
+        // 10mS Tasks
+        if (ten_mS_Flag) {
+          ten_mS_Flag = false;
 
-#if BSP_NUMBER_OF_CORES == 1
 
-        /* Update all board LEDs */
-        for (uint32_t i = 0; i < leds.led_count; i++)
-        {
-            /* Get pin to toggle */
-            uint32_t pin = leds.p_leds[i];
+          if (readEEPROM == true) {
+              switch(eepromReadWriteState++) {
+                  case 0:
+                      g_iica_master0_ctrl.slave = EEPROM_I2C_BUS_ADDRESS;
+                      err = R_IICA_MASTER_Write(&g_iica_master0_ctrl, (uint8_t *)&readWriteStartingRegister[0], 2, true);
+                      break;
+                  case 1:
+                      err = R_IICA_MASTER_Read(&g_iica_master0_ctrl, &readEEpromValues[0], noBytestoRW, false);
+                      break;
+                  case 2:
+                      readEEPROM = false;
+                      eepromReadWriteState = 0;
+                      break;
+              }
+          }
 
-            /* Write to this pin */
-            R_BSP_PinWrite((bsp_io_port_pin_t) pin, pin_level);
+          if (writeEEPROM == true) {
+              g_iica_master0_ctrl.slave = EEPROM_I2C_BUS_ADDRESS;
+              err = R_IICA_MASTER_Write(&g_iica_master0_ctrl, (uint8_t *)&writeEEpromValues[0], noBytestoRW + 2, false);
+              writeEEPROM = false;
+          }
+
+
+          if (getTempHum == true) {
+              switch (getTempHumState++) {
+                  case 0:
+                      g_iica_master0_ctrl.slave = SENSOR_I2C_BUS_ADDRESS;
+                      err = R_IICA_MASTER_Write(&g_iica_master0_ctrl, (uint8_t *)&cmdRead[0], 2, false);
+                      break;
+                  case 1:
+                      err = R_IICA_MASTER_Read(&g_iica_master0_ctrl, &sensorRegisters[0], 6, false);
+                      break;
+                  case 2:
+                      currentTempF = (uint8_t)(
+                              (uint32_t)(
+                              (uint32_t)(
+                              (uint32_t)(((uint32_t)sensorRegisters[0] << 8) + sensorRegisters[1])
+                              * 315)
+                              / 0xFFFF)
+                              - 49);
+
+                      currentHum = (uint8_t)(
+                              (uint32_t)(
+                              (uint32_t)(
+                              (uint32_t)(((uint32_t)sensorRegisters[3] << 8) + sensorRegisters[4])
+                              *100)
+                              /0xFFFF));
+
+                      getTempHum = false;
+                      getTempHumState = 0;
+                      break;
+              }
+          }
+
+
+
+          if (sampleData_DLHR == true) {
+              switch (sensorSampleState) {
+                  case 0:
+                      R_PORT1->PODR_b.PODR10 = 0;
+                      break;
+                  case 1:
+                      status = R_SAU_SPI_Write(&g_spi0_ctrl, spiCmdStartSingle, 3, SPI_BIT_WIDTH_8_BITS);
+                      break;
+                  case 2:
+                      status = R_SAU_SPI_WriteRead(&g_spi0_ctrl, spiCmdReadValue, spiReadSensorData, 7, SPI_BIT_WIDTH_8_BITS);
+                      break;
+                  case 3:
+                      R_PORT1->PODR_b.PODR10 = 1;
+                      break;
+                  case 4:
+                      break;
+                  case 5:
+                      sampleData_DLHR = false;
+                      sensorSampleState = 0;
+                      break;
+                  default:
+                      break;
+              }
+              if (sensorSampleState != 5) sensorSampleState++;
+          }
+
+          if (sampleData_Barometer == true) {
+              switch (sensorSampleState) {
+                  case 0:
+                      status = R_SAU_SPI_Close(&g_spi0_ctrl);
+//                      if (status != FSP_SUCCESS)
+//                      {
+//                          while (1);
+//                      }
+                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &bar_spi0_cfg);
+//                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &g_spi0_cfg);
+                      if (status != FSP_SUCCESS)
+//                      {
+//                          while (1);
+//                      }
+                       break;
+                  case 1:
+                      R_PORT0->PODR_b.PODR8 = 0;
+                      break;
+                  case 2:
+                      status = R_SAU_SPI_Write(&g_spi0_ctrl, spiCmdGetBarometricPressure, 2, SPI_BIT_WIDTH_8_BITS);
+                      break;
+                  case 3:
+                      R_PORT0->PODR_b.PODR8 = 1;
+                      break;
+                  case 4:
+                      R_PORT0->PODR_b.PODR8 = 0;
+                      break;
+                  case 5:
+                      status = R_SAU_SPI_WriteRead(&g_spi0_ctrl, spiCmdGetBarometricPressure, spiReadSensorData, 2, SPI_BIT_WIDTH_8_BITS);
+                      break;
+                  case 6:
+                      R_PORT0->PODR_b.PODR8 = 1;
+                      break;
+                  case 7:
+                      sampleData_Barometer = false;
+                      sensorSampleState = 0;
+                      break;
+                  case 8:
+                      status = R_SAU_SPI_Close(&g_spi0_ctrl);
+//                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &bar_spi0_cfg);
+//                       if (status != FSP_SUCCESS)
+//                       {
+//                           while (1);
+//                       }
+                        status = R_SAU_SPI_Open(&g_spi0_ctrl, &g_spi0_cfg);
+//                        if (status != FSP_SUCCESS)
+//                        {
+//                            while (1);
+//                        }
+                         break;
+                  default:
+                      break;
+              }
+              if (sensorSampleState != 6) sensorSampleState++;
+          }
+
+
+
+        }  // end of 10mS Tasks
+        //---------------------------------
+
+
+        //---------------------------------
+        // 25mS Tasks
+        if (twentyfive_mS_Flag) {
+          twentyfive_mS_Flag = false;
+
+//          if (BOARD_MOUNTED_SWITCH == false) {
+//            buttonPushed = true;    // note: there is no debouncing here (although it is a good idea)
+//                                    // because once the "low" is detected it's locked in and only released
+//                                    // by the processing
+//                                    // (The reason to add it would be if the bouncing was longer than it took
+//                                    // to respond to the press)
+//          }
+//
+//
+//          switch (sensorStateMachine) {
+//              case 0:
+//                  //ProcessSensorDataSim(&pressureSensorObj);
+//                  break;
+//              case 1:
+//                  //ProcessSensorDataSim(&temperatureSensorObj);
+//                  break;
+//              case 2:
+//                  //ProcessSensorDataSim(&humiditySensorObj);
+//                  sensorStateMachine = 0; // NOTE: this line needs to be in the last case!!!
+//                  break;
+//              default:
+//                  break;
+//          }
+
+          keyCode = ScanKeyboard();
+
+
+//          if (getTempHum == true) {
+//              switch (getTempHumState++) {
+//                  case 0:
+//                      g_iica_master0_ctrl.slave = SENSOR_I2C_BUS_ADDRESS;
+//                      err = R_IICA_MASTER_Write(&g_iica_master0_ctrl, (uint8_t *)&cmdRead[0], 2, false);
+//                      break;
+//                  case 1:
+//                      err = R_IICA_MASTER_Read(&g_iica_master0_ctrl, &sensorRegisters[0], 6, false);
+//                      break;
+//                  case 2:
+//                      currentTempF = (uint8_t)(
+//                              (uint32_t)(
+//                              (uint32_t)(
+//                              (uint32_t)(((uint32_t)sensorRegisters[0] << 8) + sensorRegisters[1])
+//                              * 315)
+//                              / 0xFFFF)
+//                              - 49);
+//
+//                      currentHum = (uint8_t)(
+//                              (uint32_t)(
+//                              (uint32_t)(
+//                              (uint32_t)(((uint32_t)sensorRegisters[3] << 8) + sensorRegisters[4])
+//                              *100)
+//                              /0xFFFF));
+//
+//                      getTempHum = false;
+//                      getTempHumState = 0;
+//                      break;
+//              }
+//          }
+//
+//
+//
+//          if (sampleData_DLHR == true) {
+//              switch (sensorSampleState) {
+//                  case 0:
+//                      R_PORT1->PODR_b.PODR10 = 0;
+//                      break;
+//                  case 1:
+//                      status = R_SAU_SPI_Write(&g_spi0_ctrl, spiCmdStartSingle, 3, SPI_BIT_WIDTH_8_BITS);
+//                      break;
+//                  case 2:
+//                      status = R_SAU_SPI_WriteRead(&g_spi0_ctrl, spiCmdReadValue, spiReadSensorData, 7, SPI_BIT_WIDTH_8_BITS);
+//                      break;
+//                  case 3:
+//                      R_PORT1->PODR_b.PODR10 = 1;
+//                      break;
+//                  case 4:
+//                      break;
+//                  case 5:
+//                      sampleData_DLHR = false;
+//                      sensorSampleState = 0;
+//                      break;
+//                  default:
+//                      break;
+//              }
+//              if (sensorSampleState != 5) sensorSampleState++;
+//          }
+
+
+        }  // end of 25mS Tasks
+        //---------------------------------
+
+
+        //---------------------------------
+        // 100mS Tasks
+        if (hundred_mS_Flag) {
+          hundred_mS_Flag = false;
+
+//          if (flashEnabled == true) {
+//              flashCounter--;
+//              if (flashCounter == 0) {
+//                  flashCounter = flashDelaySeed;
+//                  R_PORT0->PODR_b.PODR8 = pin_level;
+//                  R_PORT0->PODR_b.PODR9 = pin_level;
+//
+//                  pin_level ^= true;
+//              }
+//          }
+
+
+        }  // end of 100mS Tasks
+        //---------------------------------
+
+
+        //---------------------------------
+        // 1 Sec Tasks
+        if (one_S_Flag) {
+          one_S_Flag = false;
+
+//          R_PORT0->PODR_b.PODR8 = pin_level;
+//          R_PORT0->PODR_b.PODR9 = pin_level;
+//
+          R_PORT0->PODR_b.PODR11 = pin_level;
+
+          R_PORT2->PODR_b.PODR1 = pin_level;
+          R_PORT1->PODR_b.PODR1 = pin_level;
+          R_PORT1->PODR_b.PODR2 = pin_level;
+
+
+
+          pin_level ^= true;
+
+        } // end of 1Sec Tasks
+        //---------------------------------
+
+
+        //---------------------------------
+        // Every time through the loop
+        // Check to see if a packet has been received
+        if (processPacket == true) {
+            processPacket = false;
+            ProcessPacket();
         }
-#else
 
-        /* Update LED that is at the index of this core. */
-        R_BSP_PinWrite((bsp_io_port_pin_t) leds.p_leds[_RA_CORE], pin_level);
-#endif
-
-        /* Protect PFS registers */
-        R_BSP_PinAccessDisable();
-
-        /* Toggle level for next write */
-        if (BSP_IO_LEVEL_LOW == pin_level)
-        {
-            pin_level = BSP_IO_LEVEL_HIGH;
-        }
-        else
-        {
-            pin_level = BSP_IO_LEVEL_LOW;
+        // If the buffer is not empty, process a byte
+        if (!RxBufferEmpty()) {
+            ProcessReceiveBuffer();
         }
 
-        /* Delay */
-        R_BSP_SoftwareDelay(delay, bsp_delay_units);
+
+        // end Every time through the loop
+        //---------------------------------
+
     }
 }
 
@@ -123,3 +482,28 @@ void R_BSP_WarmStart (bsp_warm_start_event_t event)
         R_IOPORT_Open(&IOPORT_CFG_CTRL, &IOPORT_CFG_NAME);
     }
 }
+
+
+/*******************************************************************************************************************//**
+ *  @brief      User callback function
+ *  @param[in]  p_args
+ *  @retval None
+ **********************************************************************************************************************/
+void iica_master_callback(i2c_master_callback_args_t *p_args)
+{
+    if (NULL != p_args)
+    {
+        /* capture callback event for validating the i2c transfer event*/
+        i2c_event = p_args->event;
+        if (i2c_event == I2C_MASTER_EVENT_TX_COMPLETE) {
+            i2cBusy = false;
+        }
+    }
+}
+
+
+void sau_spi_callback(spi_callback_args_t *p_args)
+{
+}
+
+
