@@ -179,6 +179,10 @@ uint8_t ProcessPacket(void)
                 sprintf(message, "$r1%d:%d:%d\n", pressureSensor1.data.rawData[pressureSensor1.data.nextValue], temperatureSensor.data.average, nozzleNo);
                 SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
                 break;
+            case '2':    // report 1 gives the oldest pressure, average temperature, and nozzle number
+                sprintf(message, "$r1%d:%d:%d\n", pressureSensor1.data.rawData[pressureSensor1.data.nextValue], temperatureSensor.data.average, pressureSensorBarometer.data.average);
+                SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
+                break;
         }
         break;
     case 'b':     // b = check switch (button) press
@@ -193,6 +197,31 @@ uint8_t ProcessPacket(void)
             SendString("$B0\n", 6, StripZeros, AddCRLF);
        }
         break;
+    case 'v':
+    case 'V': // individual sensor reports
+        switch (packetBuffer[PARAMETER_START_LOCATION]) {
+            case 0:
+                sprintf(message, "$v1%d\n", pressureSensorBarometer.data.average);
+                SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
+                break;
+            case 1:
+                sprintf(message, "$v1%d\n", pressureSensor1.data.average);
+                SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
+                break;
+            case 2:
+                sprintf(message, "$v1%d\n", temperatureSensor.data.average);
+                SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
+                break;
+            case 4:
+                sprintf(message, "$v1%d\n", humiditySensor.data.average);
+                SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
+                break;
+            case 5:
+                break;
+        }
+        break;
+
+
     }
 
     processPacket = false;

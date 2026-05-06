@@ -108,7 +108,7 @@ void sau_spi_callback(spi_callback_args_t *p_args);
     // General
     uint8_t spiReadSensorData[7] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     uint8_t sensorSampleState = 0;
-    uint8_t busBusy_SPI = false;
+    volatile uint8_t busBusy_SPI = false;
     uint8_t sensorSelectState = 0;
 
     // UART Stuff
@@ -161,6 +161,7 @@ void hal_entry (void)
     InitSensor(&pressureSensor1, &initValues1);
     InitSensor(&temperatureSensor, &initValues2);
     InitSensor(&humiditySensor, &initValues3);
+    InitSensor(&pressureSensorBarometer, &initValues1);
 
     ParseParamsToUINT16(&testPacket[3], testUINT16Array, 6);
 
@@ -295,11 +296,6 @@ void hal_entry (void)
                       SENSOR_BAROMETER_SS = SS_DEASSERTED;
                       break;
                   case 7:
-                      sampleData_Barometer = false;
-                      sensorSampleState = 0;
-                      busBusy_SPI = false;
-                      break;
-                  case 8:
                       status = R_SAU_SPI_Close(&g_spi0_ctrl);
 //                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &bar_spi0_cfg);
 //                       if (status != FSP_SUCCESS)
@@ -312,10 +308,18 @@ void hal_entry (void)
 //                            while (1);
 //                        }
                          break;
+                  case 8:
+                      AddSensorInt32Value(&pressureSensorBarometer, 4);
+                      break;
+                  case 9:
+                      sampleData_Barometer = false;
+                      sensorSampleState = 0;
+                      busBusy_SPI = false;
+                      break;
                   default:
                       break;
               }
-              if (sensorSampleState != 6) sensorSampleState++;
+              if (sensorSampleState != 8) sensorSampleState++;
           }
 
 
@@ -437,21 +441,26 @@ void hal_entry (void)
 //          }
 
           if (busBusy_SPI == false) {
+              //SendString("*", (uint16_t)1, StripZeros, AddCRLF);
               switch (sensorSelectState) {
                   case 0:  // Sensor 1
                       sampleData_DLHR_1 = true;
                       sensorSelectState = 1;
+                      //SendString("0", (uint16_t)1, StripZeros, AddCRLF);
                       break;
                   case 1:  // Sensor 2
                       sampleData_DLHR_2 = true;
                       sensorSelectState = 2;
+                      //SendString("1", (uint16_t)1, StripZeros, AddCRLF);
                       break;
                   case 2:  // Sensor 3
                       sensorSelectState = 3;
+                      //SendString("2", (uint16_t)1, StripZeros, AddCRLF);
                       break;
                   case 3: // Barometric Sensor
                       sampleData_Barometer = true;
                       sensorSelectState = 0;
+                      //SendString("3", (uint16_t)1, StripZeros, AddCRLF);
                        break;
                   default:
                       break;
@@ -479,6 +488,8 @@ void hal_entry (void)
 
 
           pin_level ^= true;
+
+          getTempHum = true;
 
         } // end of 1Sec Tasks
         //---------------------------------

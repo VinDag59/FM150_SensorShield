@@ -37,7 +37,7 @@
 #define  BOARD_MOUNTED_SWITCH R_PORT2->PIDR_b.PIDR0
 
 #define DEFAULT_SER_NO "SNxxxxxx"
-#define DEFAULT_MODEL_NAME "APC Sensor Simulator\r\n"
+#define DEFAULT_MODEL_NAME "APC Sensor Shield\r\n"
 #define DEFAULT_REF_DATA "SNxxxxxx;Acme Comms 2000"
 
 #define SER_NO_LENGTH 12
