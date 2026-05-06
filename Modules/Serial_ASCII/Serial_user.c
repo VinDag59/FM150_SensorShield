@@ -180,7 +180,7 @@ uint8_t ProcessPacket(void)
                 SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
                 break;
             case '2':    // report 1 gives the oldest pressure, average temperature, and nozzle number
-                sprintf(message, "$r1%d:%d:%d\n", pressureSensor1.data.rawData[pressureSensor1.data.nextValue], temperatureSensor.data.average, pressureSensorBarometer.data.average);
+                sprintf(message, "$r2%d:%d:%d:%d\n", pressureSensor1.data.rawData[pressureSensor1.data.nextValue], temperatureSensor.data.average, humiditySensor.data.average, pressureSensorBarometer.data.average);
                 SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
                 break;
         }
