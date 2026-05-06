@@ -28,6 +28,7 @@ extern volatile uint8_t twentyfive_mS_Flag;
 extern volatile uint8_t hundred_mS_Flag;
 extern volatile uint8_t one_S_Flag;
 extern volatile uint8_t i2c_timeout_Flag;
+extern volatile uint8_t sendReport_Flag;
 
 // prototypes
 void SysTick_Handler(void);

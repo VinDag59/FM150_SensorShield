@@ -56,11 +56,20 @@ extern volatile uint8_t rxBuffer[RX_BUFFER_SIZE];
 extern volatile uint8_t flashEnabled;
 extern volatile uint16_t flashDelaySeed;
 
-extern sensor_data_t pressureSensor;
+extern sensor_data_t pressureSensor1;
+extern sensor_data_t pressureSensor2;
+extern sensor_data_t pressureSensor3;
+extern sensor_data_t pressureSensorBarometer;
 extern sensor_data_t temperatureSensor;
 extern sensor_data_t humiditySensor;
 extern uint8_t nozzleNo;
 extern uint8_t buttonPushed;
+
+
+//Comm Control variables
+uint8_t streaming = false;
+uint8_t streamReport = 0;
+uint16_t streamIntervalDelay = 1000;  // default is 1 Sec (1000mS)
 
 // Process Variables from other modules/code
 
@@ -111,58 +120,63 @@ uint8_t ProcessPacket(void)
     switch (packetBuffer[COMMAND_LOCATION]) {
     // list of commands
     // each command has intentional fall-thru for upper/lower case
-    case 'f':     // r = turn on LED
-    case 'F':
-        flashEnabled = (packetBuffer[PARAMETER_START_LOCATION] == '1') ? true : false;
-        SendString("$f\n", strlen("$f\n"), NoStripZeros, NoAddCRLF);
-        break;
-    case 's':     // s = adjust the flash speed
+    case 's':     // s = turn streaming on/off for a report
     case 'S':
+        if (packetBuffer[PARAMETER_START_LOCATION] == 1) {
+            streaming = true;
+            streamReport = packetBuffer[PARAMETER_START_LOCATION + 1] - '0';
+        }
+        else {
+            streaming = false;
+        }
+        break;
+    case 'i': // Streaming interval in mS from 200-2000
+    case 'I':
         errorCode = ConvertASCII2UINT16((char*)&packetBuffer[PARAMETER_START_LOCATION], 5, '\n', &tempValue);
-        if ((tempValue <= MAX_TIME) && (tempValue >= MIN_TIME)) {
-            flashDelaySeed = tempValue;
-            sprintf(message, "$s%d\n", flashDelaySeed);
+        if ((tempValue <= 2000) && (tempValue >= 200)) {
+            streamIntervalDelay = tempValue;
+            sprintf(message, "$s%d\n", streamIntervalDelay);
             SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
         }
         break;
-    case 'n':     // n<sensor> = new sensor value
-    case 'N':
-        switch (packetBuffer[PARAMETER_START_LOCATION]) {
-        case '0': // pressure sensor
-            errorCode = ConvertASCII2UINT16((char*)&packetBuffer[PARAMETER_START_LOCATION +1], 5, '\n', &tempValue);
-            if (errorCode == 0) {
-               AddSensorUint16Value(&pressureSensor, tempValue);
-               sprintf(message, "$n0%d\n", tempValue);
-               SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
-            }
-            break;
-        case '1': // temperature sensor
-            errorCode = ConvertASCII2UINT16((char*)&packetBuffer[PARAMETER_START_LOCATION +1], 5, '\n', &tempValue);
-            if (errorCode == 0) {
-               AddSensorUint16Value(&temperatureSensor, tempValue);
-               sprintf(message, "$n0%d\n", tempValue);
-               SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
-            }
-            break;
-        case '3': // humidity sensor
-            errorCode = ConvertASCII2UINT16((char*)&packetBuffer[PARAMETER_START_LOCATION +1], 5, '\n', &tempValue);
-            if (errorCode == 0) {
-               AddSensorUint16Value(&humiditySensor, tempValue);
-               sprintf(message, "$n0%d\n", tempValue);
-               SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
-            }
-            break;
-        }
-        break;
+//    case 'n':     // n<sensor> = new sensor value
+//    case 'N':
+//        switch (packetBuffer[PARAMETER_START_LOCATION]) {
+//        case '0': // pressure sensor
+//            errorCode = ConvertASCII2UINT16((char*)&packetBuffer[PARAMETER_START_LOCATION +1], 5, '\n', &tempValue);
+//            if (errorCode == 0) {
+//               AddSensorUint16Value(&pressureSensor, tempValue);
+//               sprintf(message, "$n0%d\n", tempValue);
+//               SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
+//            }
+//            break;
+//        case '1': // temperature sensor
+//            errorCode = ConvertASCII2UINT16((char*)&packetBuffer[PARAMETER_START_LOCATION +1], 5, '\n', &tempValue);
+//            if (errorCode == 0) {
+//               AddSensorUint16Value(&temperatureSensor, tempValue);
+//               sprintf(message, "$n0%d\n", tempValue);
+//               SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
+//            }
+//            break;
+//        case '3': // humidity sensor
+//            errorCode = ConvertASCII2UINT16((char*)&packetBuffer[PARAMETER_START_LOCATION +1], 5, '\n', &tempValue);
+//            if (errorCode == 0) {
+//               AddSensorUint16Value(&humiditySensor, tempValue);
+//               sprintf(message, "$n0%d\n", tempValue);
+//               SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
+//            }
+//            break;
+//        }
+//        break;
     case 'r':
     case 'R':
         switch (packetBuffer[PARAMETER_START_LOCATION]) {
             case '0':    // report 0 gives the average pressure, average temperature, and average humidity
-                sprintf(message, "$r0%d:%d:%d\n", pressureSensor.data.average, temperatureSensor.data.average, humiditySensor.data.average);
+                sprintf(message, "$r0%d:%d:%d\n", pressureSensor1.data.average, temperatureSensor.data.average, humiditySensor.data.average);
                 SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
                 break;
             case '1':    // report 1 gives the oldest pressure, average temperature, and nozzle number
-                sprintf(message, "$r1%d:%d:%d\n", pressureSensor.data.rawData[pressureSensor.data.nextValue], temperatureSensor.data.average, nozzleNo);
+                sprintf(message, "$r1%d:%d:%d\n", pressureSensor1.data.rawData[pressureSensor1.data.nextValue], temperatureSensor.data.average, nozzleNo);
                 SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
                 break;
         }

@@ -22,9 +22,9 @@
 //--------------------------------
 // Structures, enums, unions, typdefs
 typedef union Sensor {
-    uint8_t byteAccess[(2 * SENSOR_HISTORY_LENGTH) + 4 + 2 + 1];
+    uint8_t byteAccess[(4 * SENSOR_HISTORY_LENGTH) + 4 + 2 + 1];
     struct SensorData {
-        int16_t rawData[SENSOR_HISTORY_LENGTH];
+        int32_t rawData[SENSOR_HISTORY_LENGTH];
         int32_t total;
         int16_t average;
         uint8_t nextValue;
@@ -49,6 +49,7 @@ uint8_t InitSensor(sensor_data_t * _sensor_to_init, const sensor_data_t * _init_
 uint8_t ParseParamsToUINT16(uint8_t * _param_string, uint16_t *_param_array, uint8_t _no_of_params);
 uint8_t AddSensorUint16Value(sensor_data_t * _raw_sensor_data, uint16_t _new_data);
 uint8_t AddSensorInt16Value(sensor_data_t * _raw_sensor_data, int16_t _new_data);
+uint8_t AddSensorInt32Value(sensor_data_t * _raw_sensor_data, int32_t _new_data);
 void ProcessSensorDataSim(sensor_obj_t * _sensor);
 
 

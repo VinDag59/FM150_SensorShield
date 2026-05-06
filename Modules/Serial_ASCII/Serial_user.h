@@ -69,6 +69,10 @@
 extern uint8_t processPacket;
 //extern uint8_t flashEnable;
 //extern volatile uint16_t flashDelaySeed;
+extern uint8_t streaming;
+extern uint8_t streamReport;
+extern uint16_t streamIntervalDelay;
+
 
 // prototypes
 

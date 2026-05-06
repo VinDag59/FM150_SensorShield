@@ -92,7 +92,7 @@ FSP Configuration
       P100 24 GPIO PMOD1_MISO_RXD_ARDUINO_D4 - None "Input mode" - - "ADC0: AN022; IICA0: SCLA0; IRQ: IRQ2; SAU_I2C00: SDA00; SAU_SPI00: SI00; SAU_UART0: RXD0; TAU01: TI01; TAU01: TO01; TAU04: TI04; TAU04: TO04; UARTA: RXDA" - IO - - 
       P101 23 GPIO PMOD1_MOSI_TXD_ARDUINO_D5 - - "Output mode (Initial High)" - - "ADC0: AN021; IICA0: SDAA0; IRQ: IRQ3; SAU_SPI00: SO00; SAU_UART0: TXD0; TAU00: TI00; TAU07: TI07; TAU07: TO07; UARTA: TXDA" - IO - - 
       P102 22 GPIO PMOD1_SCK_RTS_ARDUINO_D6 - - "Output mode (Initial High)" - - "CGC: PCLBUZ0; IRQ: IRQ4; RTC: RTCOUT; SAU_I2C00: SCL00; SAU_SPI00: SCK00; TAU00: TO00; TAU06: TI06; TAU06: TO06" - IO - - 
-      P103 21 GPIO PMOD1_CS_CTS_ARDUINO_D7 - None "Input mode" - - "IRQ: IRQ5; SAU_SPI00: SSI00; TAU05: TI05; TAU05: TO05" - IO - - 
+      P103 21 GPIO PMOD1_CS_CTS_ARDUINO_D7 - - "Output mode (Initial High)" - - "IRQ: IRQ5; SAU_SPI00: SSI00; TAU05: TI05; TAU05: TO05" - IO - - 
       P108 17 JTAG/SWD_SWDIO - - - "Peripheral mode" - - "JTAG/SWD: SWDIO; TAU03: TI03; TAU03: TO03" - IO - - 
       P109 18 GPIO PMOD2_RESET_ARDUINO_D8 - - "Output mode (Initial High)" - - "IICA0: SDAA0; IRQ: IRQ4; SAU_SPI20: SO20; SAU_UART2: TXD2; TAU02: TI02; TAU02: TO02; UARTA: TXDA" - IO - - 
       P110 19 GPIO PMOD2_SDA_ARDUINO_D9 - - "Output mode (Initial High)" - - "IICA0: SCLA0; IRQ: IRQ3; SAU_I2C20: SDA20; SAU_SPI20: SI20; SAU_UART2: RXD2; TAU01: TI01; TAU01: TO01; UARTA: RXDA" - IO - - 
@@ -125,7 +125,7 @@ FSP Configuration
       P100 24 - PMOD1_MISO_RXD_ARDUINO_D4 - None Disabled - - "ADC0: AN022; IICA0: SCLA0; IRQ: IRQ2; SAU_I2C00: SDA00; SAU_SPI00: SI00; SAU_UART0: RXD0; TAU01: TI01; TAU01: TO01; TAU04: TI04; TAU04: TO04; UARTA: RXDA" - IO - - 
       P101 23 - PMOD1_MOSI_TXD_ARDUINO_D5 - - Disabled - - "ADC0: AN021; IICA0: SDAA0; IRQ: IRQ3; SAU_SPI00: SO00; SAU_UART0: TXD0; TAU00: TI00; TAU07: TI07; TAU07: TO07; UARTA: TXDA" - IO - - 
       P102 22 - PMOD1_SCK_RTS_ARDUINO_D6 - - Disabled - - "CGC: PCLBUZ0; IRQ: IRQ4; RTC: RTCOUT; SAU_I2C00: SCL00; SAU_SPI00: SCK00; TAU00: TO00; TAU06: TI06; TAU06: TO06" - IO - - 
-      P103 21 - PMOD1_CS_CTS_ARDUINO_D7 - None Disabled - - "IRQ: IRQ5; SAU_SPI00: SSI00; TAU05: TI05; TAU05: TO05" - IO - - 
+      P103 21 - PMOD1_CS_CTS_ARDUINO_D7 - - Disabled - - "IRQ: IRQ5; SAU_SPI00: SSI00; TAU05: TI05; TAU05: TO05" - IO - - 
       P108 17 JTAG/SWD_SWDIO - - - "Peripheral mode" - - "JTAG/SWD: SWDIO; TAU03: TI03; TAU03: TO03" - IO - - 
       P109 18 - PMOD2_RESET_ARDUINO_D8 - - Disabled - - "IICA0: SDAA0; IRQ: IRQ4; SAU_SPI20: SO20; SAU_UART2: TXD2; TAU02: TI02; TAU02: TO02; UARTA: TXDA" - IO - - 
       P110 19 - PMOD2_SDA_ARDUINO_D9 - - Disabled - - "IICA0: SCLA0; IRQ: IRQ3; SAU_I2C20: SDA20; SAU_SPI20: SI20; SAU_UART2: RXD2; TAU01: TI01; TAU01: TO01; UARTA: RXDA" - IO - - 
@@ -199,7 +199,7 @@ FSP Configuration
       Extra: Transfer Order: LSB first
       Extra: Transfer level: Positive logic
       Extra: Clock output: Not Available
-      Interrupts: Callback: NULL
+      Interrupts: Callback: UartA_CB
       Interrupts: Receive Interrupt Priority: Priority 2
       Interrupts: Transmit Interrupt Priority: Priority 2
       Interrupts: Error Interrupt Priority: Disabled

@@ -204,7 +204,7 @@
       <property id="module.driver.uarta.order" value="module.driver.uarta.order.lsb"/>
       <property id="module.driver.uarta.transfer_level" value="module.driver.uarta.transfer_level.positive"/>
       <property id="module.driver.uarta.clk_out" value="module.driver.uarta.clk_out.disabled"/>
-      <property id="module.driver.uart.callback" value="NULL"/>
+      <property id="module.driver.uart.callback" value="UartA_CB"/>
       <property id="module.driver.uarta.rxi_ipl" value="board.icu.common.irq.priority2"/>
       <property id="module.driver.uarta.txi_ipl" value="board.icu.common.irq.priority2"/>
       <property id="module.driver.uarta.eri_ipl" value="_disabled"/>
@@ -337,9 +337,8 @@
       <configSetting altId="p101.gpio_mode.gpio_mode_out.high" configurationId="p101.gpio_mode"/>
       <configSetting altId="p102.output.high" configurationId="p102"/>
       <configSetting altId="p102.gpio_mode.gpio_mode_out.high" configurationId="p102.gpio_mode"/>
-      <configSetting altId="p103.input" configurationId="p103"/>
-      <configSetting altId="p103.gpio_mode.gpio_mode_in" configurationId="p103.gpio_mode"/>
-      <configSetting altId="p103.gpio_pupd.gpio_pupd_ip_up" configurationId="p103.gpio_pupd"/>
+      <configSetting altId="p103.output.high" configurationId="p103"/>
+      <configSetting altId="p103.gpio_mode.gpio_mode_out.high" configurationId="p103.gpio_mode"/>
       <configSetting altId="p108.jtag_fslash_swd.swdio" configurationId="p108"/>
       <configSetting altId="p108.gpio_mode.gpio_mode_peripheral" configurationId="p108.gpio_mode"/>
       <configSetting altId="p109.output.high" configurationId="p109"/>

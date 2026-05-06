@@ -87,7 +87,22 @@ uint8_t AddSensorInt16Value(sensor_data_t * _raw_sensor_data, int16_t _new_data)
     return returnStatus;
 }
 
+uint8_t AddSensorInt32Value(sensor_data_t * _raw_sensor_data, int32_t _new_data)
+{
+    uint8_t returnStatus = 0;
 
+    _raw_sensor_data->data.total -= _raw_sensor_data->data.rawData[_raw_sensor_data->data.nextValue];
+    _raw_sensor_data->data.rawData[_raw_sensor_data->data.nextValue] = _new_data;
+    _raw_sensor_data->data.total += _raw_sensor_data->data.rawData[_raw_sensor_data->data.nextValue];
+
+    _raw_sensor_data->data.average = (uint16_t)_raw_sensor_data->data.total / SENSOR_HISTORY_LENGTH;
+
+    _raw_sensor_data->data.nextValue++;
+    if(_raw_sensor_data->data.nextValue >= SENSOR_HISTORY_LENGTH) _raw_sensor_data->data.nextValue = 0;
+
+    return returnStatus;
+
+}
 //void ProcessSensorDataSim(sensor_obj_t * _sensor)
 //{
 //    AddSensorInt16Value(_sensor->pSensorData, (sine256[_sensor->sineOffset] >> 4));

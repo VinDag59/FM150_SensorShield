@@ -6,6 +6,8 @@
 
 #include "hal_data.h"
 #include "Project.h"
+#include <string.h>
+#include <stdio.h>
 #include "Serial_user.h"
 #include "ASCII_numbers.h"
 #include "Scheduler.h"
@@ -18,20 +20,37 @@ void i2c_master_callback(i2c_master_callback_args_t *p_args);
 void sau_spi_callback(spi_callback_args_t *p_args);
 
 
+//-----------------------------
+// General #defines
+#define SENSOR_1_SS R_PORT1->PODR_b.PODR10
+#define SENSOR_2_SS R_PORT1->PODR_b.PODR12
+#define SENSOR_3_SS R_PORT1->PODR_b.PODR9
+#define SENSOR_3_EEPROM_SEL R_PORT1->PODR_b.PODR3
+#define SENSOR_BAROMETER_SS R_PORT0->PODR_b.PODR8
+
+#define SS_ASSERTED 0
+#define SS_DEASSERTED 1
+
+
 
 //-----------------------------
     // *** Variable Definitions ***
     // File Scope Variables
     bsp_io_level_t pin_level = BSP_IO_LEVEL_LOW; /* Holds level to set for pins */
 
-    sensor_data_t pressureSensor;
+    //sensor_data_t pressureSensor;
+    sensor_data_t pressureSensor1;
+    sensor_data_t pressureSensor2;
+    sensor_data_t pressureSensor3;
+    sensor_data_t pressureSensorBarometer;
+
     sensor_data_t temperatureSensor;
     sensor_data_t humiditySensor;
     uint8_t nozzleNo = 12;
 
-    sensor_obj_t pressureSensorObj = {.pSensorData = &pressureSensor, .sineOffset = 10};
-    sensor_obj_t temperatureSensorObj = {.pSensorData = &temperatureSensor, .sineOffset = 50};
-    sensor_obj_t humiditySensorObj = {.pSensorData = &humiditySensor, .sineOffset = 90};
+//    sensor_obj_t pressureSensorObj = {.pSensorData = &pressureSensor, .sineOffset = 10};
+//    sensor_obj_t temperatureSensorObj = {.pSensorData = &temperatureSensor, .sineOffset = 50};
+//    sensor_obj_t humiditySensorObj = {.pSensorData = &humiditySensor, .sineOffset = 90};
 
     const sensor_data_t initValues1 = {.byteAccess ={1,0, 1,0, 1,0, 1,0, 1,0, 1,0, 1,0, 1,0,  8,0,0,0, 1,0, 0}};
     const sensor_data_t initValues2 = {.byteAccess ={2,0, 2,0, 2,0, 2,0, 2,0, 2,0, 2,0, 2,0, 16,0,0,0, 2,0, 0}};
@@ -80,18 +99,20 @@ void sau_spi_callback(spi_callback_args_t *p_args);
     // DLHR Sensors
     uint8_t spiCmdStartSingle[3] = {0xAA, 0x00, 0x00};
     uint8_t spiCmdReadValue[7] = {0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-    volatile uint8_t sampleData_DLHR = false;
+    volatile uint8_t sampleData_DLHR_1 = false;
+    volatile uint8_t sampleData_DLHR_2 = false;
     // Barometric Sensor
     uint8_t spiCmdGetBarometricPressure[2] = {0x20, 0x00};
     volatile uint8_t sampleData_Barometer = false;
-    spi_cfg_t bar_spi0_cfg;// = g_spi0_cfg;
-
-
+    spi_cfg_t bar_spi0_cfg;
     // General
     uint8_t spiReadSensorData[7] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     uint8_t sensorSampleState = 0;
+    uint8_t busBusy_SPI = false;
+    uint8_t sensorSelectState = 0;
 
-
+    // UART Stuff
+    char msg_str[50] = "";
 
 
 /*******************************************************************************************************************//**
@@ -133,11 +154,11 @@ void hal_entry (void)
 
     // UART Hello World, so to speak
     SendString(DEFAULT_MODEL_NAME, (uint16_t)strlen(DEFAULT_MODEL_NAME), StripZeros, NoAddCRLF);
-    SendString(FW_REV_PACKET_BUILT, (uint16_t)strlen(FW_REV_PACKET_BUILT), StripZeros, NoAddCRLF);
+//    SendString(FW_REV_PACKET_BUILT, (uint16_t)strlen(FW_REV_PACKET_BUILT), StripZeros, NoAddCRLF);
     SendString(FW_REV__BUILT, (uint16_t)strlen(FW_REV__BUILT), StripZeros, NoAddCRLF);
 
 
-    InitSensor(&pressureSensor, &initValues1);
+    InitSensor(&pressureSensor1, &initValues1);
     InitSensor(&temperatureSensor, &initValues2);
     InitSensor(&humiditySensor, &initValues3);
 
@@ -198,7 +219,10 @@ void hal_entry (void)
                               (uint32_t)(((uint32_t)sensorRegisters[3] << 8) + sensorRegisters[4])
                               *100)
                               /0xFFFF));
-
+                      break;
+                  case 3:
+                      AddSensorInt16Value(&temperatureSensor, currentTempF);
+                      AddSensorInt16Value(&humiditySensor, currentHum);
                       getTempHum = false;
                       getTempHumState = 0;
                       break;
@@ -207,10 +231,11 @@ void hal_entry (void)
 
 
 
-          if (sampleData_DLHR == true) {
+          if (sampleData_DLHR_1 == true) {
               switch (sensorSampleState) {
                   case 0:
-                      R_PORT1->PODR_b.PODR10 = 0;
+                      SENSOR_1_SS = SS_ASSERTED;
+                      busBusy_SPI = true;
                       break;
                   case 1:
                       status = R_SAU_SPI_Write(&g_spi0_ctrl, spiCmdStartSingle, 3, SPI_BIT_WIDTH_8_BITS);
@@ -219,13 +244,15 @@ void hal_entry (void)
                       status = R_SAU_SPI_WriteRead(&g_spi0_ctrl, spiCmdReadValue, spiReadSensorData, 7, SPI_BIT_WIDTH_8_BITS);
                       break;
                   case 3:
-                      R_PORT1->PODR_b.PODR10 = 1;
+                      SENSOR_1_SS = SS_DEASSERTED;
                       break;
                   case 4:
+                      AddSensorInt32Value(&pressureSensor1, (spiReadSensorData[1] << 16) + (spiReadSensorData[2] << 8) + spiReadSensorData[3]);
                       break;
                   case 5:
-                      sampleData_DLHR = false;
+                      sampleData_DLHR_1 = false;
                       sensorSampleState = 0;
+                      busBusy_SPI = false;
                       break;
                   default:
                       break;
@@ -249,26 +276,28 @@ void hal_entry (void)
 //                      }
                        break;
                   case 1:
-                      R_PORT0->PODR_b.PODR8 = 0;
+                      SENSOR_BAROMETER_SS = SS_ASSERTED;
+                      busBusy_SPI = true;
                       break;
                   case 2:
                       status = R_SAU_SPI_Write(&g_spi0_ctrl, spiCmdGetBarometricPressure, 2, SPI_BIT_WIDTH_8_BITS);
                       break;
                   case 3:
-                      R_PORT0->PODR_b.PODR8 = 1;
+                      SENSOR_BAROMETER_SS = SS_DEASSERTED;
                       break;
                   case 4:
-                      R_PORT0->PODR_b.PODR8 = 0;
+                      SENSOR_BAROMETER_SS = SS_ASSERTED;
                       break;
                   case 5:
                       status = R_SAU_SPI_WriteRead(&g_spi0_ctrl, spiCmdGetBarometricPressure, spiReadSensorData, 2, SPI_BIT_WIDTH_8_BITS);
                       break;
                   case 6:
-                      R_PORT0->PODR_b.PODR8 = 1;
+                      SENSOR_BAROMETER_SS = SS_DEASSERTED;
                       break;
                   case 7:
                       sampleData_Barometer = false;
                       sensorSampleState = 0;
+                      busBusy_SPI = false;
                       break;
                   case 8:
                       status = R_SAU_SPI_Close(&g_spi0_ctrl);
@@ -407,6 +436,27 @@ void hal_entry (void)
 //              }
 //          }
 
+          if (busBusy_SPI == false) {
+              switch (sensorSelectState) {
+                  case 0:  // Sensor 1
+                      sampleData_DLHR_1 = true;
+                      sensorSelectState = 1;
+                      break;
+                  case 1:  // Sensor 2
+                      sampleData_DLHR_2 = true;
+                      sensorSelectState = 2;
+                      break;
+                  case 2:  // Sensor 3
+                      sensorSelectState = 3;
+                      break;
+                  case 3: // Barometric Sensor
+                      sampleData_Barometer = true;
+                      sensorSelectState = 0;
+                       break;
+                  default:
+                      break;
+              }
+          }
 
         }  // end of 100mS Tasks
         //---------------------------------
@@ -447,6 +497,23 @@ void hal_entry (void)
             ProcessReceiveBuffer();
         }
 
+
+        if (streaming == true) {
+            if (sendReport_Flag == true) {
+                sendReport_Flag = false;
+
+                switch (streamReport) {
+                    case '0':    // report 0 gives the average pressure, average temperature, and average humidity
+                        sprintf(msg_str, "$r0%d:%d:%d\n", pressureSensor1.data.average, temperatureSensor.data.average, humiditySensor.data.average);
+                        SendString(msg_str, (uint16_t)strlen(msg_str), NoStripZeros, NoAddCRLF);
+                        break;
+                    case '1':    // report 1 gives the oldest pressure, average temperature, and nozzle number
+                        sprintf(msg_str, "$r1%d:%d:%d\n", pressureSensor1.data.rawData[pressureSensor1.data.nextValue], temperatureSensor.data.average, nozzleNo);
+                        SendString(msg_str, (uint16_t)strlen(msg_str), NoStripZeros, NoAddCRLF);
+                        break;
+                }
+            }
+        }
 
         // end Every time through the loop
         //---------------------------------

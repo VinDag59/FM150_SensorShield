@@ -28,6 +28,9 @@ uint16_t i2c_timeout_Counter = I2C_TIMEOUT_INIT;
 volatile uint8_t i2c_timeout_Flag;
 
 
+uint16_t reportStreamInterval_Counter = 1000;
+volatile uint8_t sendReport_Flag = false;
+extern uint16_t streamIntervalDelay;
 
 
 void SysTick_Handler(void)
@@ -61,6 +64,12 @@ void SysTick_Handler(void)
         if (i2c_timeout_Counter == 0) {
             i2c_timeout_Flag = true;
         }
+    }
+
+    reportStreamInterval_Counter--;
+    if (reportStreamInterval_Counter == 0) {
+        sendReport_Flag = true;
+        reportStreamInterval_Counter = streamIntervalDelay;
     }
 }
 
