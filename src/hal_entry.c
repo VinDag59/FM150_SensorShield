@@ -105,11 +105,18 @@ void sau_spi_callback(spi_callback_args_t *p_args);
     uint8_t spiCmdGetBarometricPressure[2] = {0x20, 0x00};
     volatile uint8_t sampleData_Barometer = false;
     spi_cfg_t bar_spi0_cfg;
+    // Honeywell Sensor
+    uint8_t hw_readEEPROM[2] = {0x03, 0x00};
+    uint8_t hw_EEPROM_values[16] ="";
+    uint8_t hw_EEPROM_pushOut[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    uint8_t init_hw_sensor = true;
     // General
     uint8_t spiReadSensorData[7] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     uint8_t sensorSampleState = 0;
     volatile uint8_t busBusy_SPI = false;
     uint8_t sensorSelectState = 0;
+    volatile uint8_t transferNotComplete;
+    volatile uint8_t i;
 
     // UART Stuff
     char msg_str[50] = "";
@@ -150,6 +157,7 @@ void hal_entry (void)
     status = R_SAU_SPI_Open(&g_spi0_ctrl, &g_spi0_cfg);
     memcpy(&bar_spi0_cfg, &g_spi0_cfg, sizeof(g_spi0_cfg));
     bar_spi0_cfg.clk_phase = SPI_CLK_PHASE_EDGE_EVEN;
+    bar_spi0_cfg.clk_polarity = SPI_CLK_POLARITY_LOW;
 
 
     // UART Hello World, so to speak
@@ -164,6 +172,43 @@ void hal_entry (void)
     InitSensor(&pressureSensorBarometer, &initValues1);
 
     ParseParamsToUINT16(&testPacket[3], testUINT16Array, 6);
+
+    // Read Honeywell EEPROM
+    while (init_hw_sensor == true){
+        if (ten_mS_Flag == true) {
+            ten_mS_Flag = false;
+
+            switch (sensorSampleState) {
+                case 0:
+                    SENSOR_3_EEPROM_SEL = SS_ASSERTED;
+                    busBusy_SPI = true;
+                    sensorSampleState++;
+                    break;
+                case 1:
+                    status = R_SAU_SPI_Write(&g_spi0_ctrl, hw_readEEPROM, 2, SPI_BIT_WIDTH_8_BITS);
+                    sensorSampleState++;
+                    break;
+                case 2:
+                    status = R_SAU_SPI_WriteRead(&g_spi0_ctrl, hw_EEPROM_pushOut, hw_EEPROM_values, 16, SPI_BIT_WIDTH_8_BITS);
+                    sensorSampleState++;
+                    break;
+                case 3:
+                    SENSOR_1_SS = SS_DEASSERTED;
+                    sensorSampleState++;
+                    break;
+                case 4:
+                    SENSOR_3_EEPROM_SEL = true;
+                    sensorSampleState = 0;
+                    busBusy_SPI = false;
+                    sensorSampleState = 0;
+                    init_hw_sensor = false;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
 
     while (1)
     {
@@ -237,79 +282,83 @@ void hal_entry (void)
                   case 0:
                       SENSOR_1_SS = SS_ASSERTED;
                       busBusy_SPI = true;
+                      sensorSampleState++;
                       break;
                   case 1:
                       status = R_SAU_SPI_Write(&g_spi0_ctrl, spiCmdStartSingle, 3, SPI_BIT_WIDTH_8_BITS);
+                      sensorSampleState++;
                       break;
                   case 2:
-                      status = R_SAU_SPI_WriteRead(&g_spi0_ctrl, spiCmdReadValue, spiReadSensorData, 7, SPI_BIT_WIDTH_8_BITS);
+                      SENSOR_1_SS = SS_DEASSERTED;
+                      sensorSampleState++;
                       break;
                   case 3:
-                      SENSOR_1_SS = SS_DEASSERTED;
+                      SENSOR_1_SS = SS_ASSERTED;
+                      sensorSampleState++;
                       break;
                   case 4:
-                      AddSensorInt32Value(&pressureSensor1, (spiReadSensorData[1] << 16) + (spiReadSensorData[2] << 8) + spiReadSensorData[3]);
+                      status = R_SAU_SPI_WriteRead(&g_spi0_ctrl, spiCmdReadValue, spiReadSensorData, 7, SPI_BIT_WIDTH_8_BITS);
+                      sensorSampleState++;
                       break;
                   case 5:
+                      SENSOR_1_SS = SS_DEASSERTED;
+                      sensorSampleState++;
+                      break;
+                  case 6:
+                      AddSensorInt32Value(&pressureSensor1, (spiReadSensorData[1] << 16) + (spiReadSensorData[2] << 8) + spiReadSensorData[3]);
+                      sensorSampleState++;
+                      break;
+                  case 7:
                       sampleData_DLHR_1 = false;
                       sensorSampleState = 0;
                       busBusy_SPI = false;
+                      sensorSampleState = 0;
                       break;
                   default:
                       break;
               }
-              if (sensorSampleState != 5) sensorSampleState++;
           }
 
           if (sampleData_Barometer == true) {
               switch (sensorSampleState) {
                   case 0:
                       status = R_SAU_SPI_Close(&g_spi0_ctrl);
-//                      if (status != FSP_SUCCESS)
-//                      {
-//                          while (1);
-//                      }
                       status = R_SAU_SPI_Open(&g_spi0_ctrl, &bar_spi0_cfg);
-//                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &g_spi0_cfg);
-                      if (status != FSP_SUCCESS)
-//                      {
-//                          while (1);
-//                      }
+                      sensorSampleState = 1;
                        break;
                   case 1:
                       SENSOR_BAROMETER_SS = SS_ASSERTED;
                       busBusy_SPI = true;
+                      sensorSampleState = 2;
                       break;
                   case 2:
                       status = R_SAU_SPI_Write(&g_spi0_ctrl, spiCmdGetBarometricPressure, 2, SPI_BIT_WIDTH_8_BITS);
+                      sensorSampleState = 3;
                       break;
                   case 3:
                       SENSOR_BAROMETER_SS = SS_DEASSERTED;
+                      sensorSampleState = 4;
                       break;
                   case 4:
                       SENSOR_BAROMETER_SS = SS_ASSERTED;
+                      sensorSampleState = 5;
                       break;
                   case 5:
                       status = R_SAU_SPI_WriteRead(&g_spi0_ctrl, spiCmdGetBarometricPressure, spiReadSensorData, 2, SPI_BIT_WIDTH_8_BITS);
+                      sensorSampleState = 6;
                       break;
                   case 6:
                       SENSOR_BAROMETER_SS = SS_DEASSERTED;
+                      sensorSampleState = 7;
                       break;
                   case 7:
                       status = R_SAU_SPI_Close(&g_spi0_ctrl);
-//                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &bar_spi0_cfg);
-//                       if (status != FSP_SUCCESS)
-//                       {
-//                           while (1);
-//                       }
-                        status = R_SAU_SPI_Open(&g_spi0_ctrl, &g_spi0_cfg);
-//                        if (status != FSP_SUCCESS)
-//                        {
-//                            while (1);
-//                        }
-                         break;
+                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &g_spi0_cfg);
+                      sensorSampleState = 8;
+                      break;
                   case 8:
                       AddSensorInt32Value(&pressureSensorBarometer, 4);
+                      sensorSampleState = 9;
                       break;
                   case 9:
                       sampleData_Barometer = false;
@@ -319,10 +368,7 @@ void hal_entry (void)
                   default:
                       break;
               }
-              if (sensorSampleState != 8) sensorSampleState++;
           }
-
-
 
         }  // end of 10mS Tasks
         //---------------------------------
@@ -582,6 +628,7 @@ void iica_master_callback(i2c_master_callback_args_t *p_args)
 
 void sau_spi_callback(spi_callback_args_t *p_args)
 {
+    transferNotComplete = 0;
 }
 
 
