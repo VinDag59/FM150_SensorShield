@@ -200,23 +200,23 @@ uint8_t ProcessPacket(void)
     case 'v':
     case 'V': // individual sensor reports
         switch (packetBuffer[PARAMETER_START_LOCATION]) {
-            case 0:
+            case '0':
                 sprintf(message, "$v0%d\n", pressureSensorBarometer.data.average);
                 SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
                 break;
-            case 1:
+            case '1':
                 sprintf(message, "$v1%d\n", pressureSensor1.data.average);
                 SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
                 break;
-            case 2:
+            case '2':
                 sprintf(message, "$v2%d\n", temperatureSensor.data.average);
                 SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
                 break;
-            case 4:
+            case '4':
                 sprintf(message, "$v3%d\n", humiditySensor.data.average);
                 SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
                 break;
-            case 5:
+            case '5':
                 break;
         }
         break;

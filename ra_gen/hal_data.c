@@ -50,7 +50,7 @@ const sau_spi_extended_cfg_t g_spi0_cfg_extend =
 .stclk = 15,
   .operation_clock = SAU_SPI_OPERATION_CLOCK_CK0, },
   .transfer_mode = SAU_SPI_TRANSFER_MODE_SINGLE, .data_phase = SAU_SPI_DATA_PHASE_START, .clock_phase =
-          SAU_SPI_CLOCK_PHASE_NON_REVERSE,
+          SAU_SPI_CLOCK_PHASE_REVERSE,
   .sau_unit = 0,
 #if defined(PIN_SCK11)
     .sck_pin_settings.pin = PIN_SCK11,

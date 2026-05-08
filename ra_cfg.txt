@@ -226,7 +226,7 @@ FSP Configuration
       Transfer Mode : Single transfer mode
       Bit Order: MSB First
       Data Phase: Data sampling on odd edge, data variation on even edge
-      Clock Phase: High when idle
+      Clock Phase: Low when idle
       Bitrate: 500000
       Callback: sau_spi_callback
       Transmit End Interrupt Priority: Priority 2
