@@ -22,13 +22,14 @@
 //--------------------------------
 // Structures, enums, unions, typdefs
 typedef union Sensor {
-    uint8_t byteAccess[(4 * SENSOR_HISTORY_LENGTH) + 4 + 2 + 1];
+    uint8_t byteAccess[(4 * SENSOR_HISTORY_LENGTH) + 4 + 2 + 1 + 1];
     struct SensorData {
         int32_t rawData[SENSOR_HISTORY_LENGTH];
         int32_t total;
         int16_t average;
         uint8_t nextValue;
-    }data;
+        uint8_t lastValue;
+    } data;
 } sensor_data_t;
 
 typedef struct sensor_obj {

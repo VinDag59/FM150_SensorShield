@@ -372,6 +372,59 @@ void hal_entry (void)
               }
           }
 
+          if (sampleData_DLHR_2 == true) {
+              switch (sensorSampleState) {
+                  case 0:
+                      status = R_SAU_SPI_Close(&g_spi0_ctrl);
+                      if (status != FSP_SUCCESS) while(1);
+                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &dlhr_spi0_cfg);
+                      if (status != FSP_SUCCESS) while(1);
+                      sensorSampleState++;
+                      break;
+                  case 1:
+                      SENSOR_2_SS = SS_ASSERTED;
+                      busBusy_SPI = true;
+                      sensorSampleState++;
+                      break;
+                  case 2:
+                      status = R_SAU_SPI_Write(&g_spi0_ctrl, spiCmdStartSingle, 3, SPI_BIT_WIDTH_8_BITS);
+                      sensorSampleState++;
+                      break;
+                  case 3:
+                      SENSOR_2_SS = SS_DEASSERTED;
+                      sensorSampleState++;
+                      break;
+                  case 4:
+                      SENSOR_2_SS = SS_ASSERTED;
+                      sensorSampleState++;
+                      break;
+                  case 5:
+                      status = R_SAU_SPI_WriteRead(&g_spi0_ctrl, spiCmdReadValue, spiReadSensorData, 7, SPI_BIT_WIDTH_8_BITS);
+                      sensorSampleState++;
+                      break;
+                  case 6:
+                      SENSOR_2_SS = SS_DEASSERTED;
+                      sensorSampleState++;
+                      break;
+                  case 7:
+                      AddSensorInt32Value(&pressureSensor2, (spiReadSensorData[1] << 16) + (spiReadSensorData[2] << 8) + spiReadSensorData[3]);
+                      sensorSampleState++;
+                      break;
+                  case 8:
+                      status = R_SAU_SPI_Close(&g_spi0_ctrl);
+                      if (status != FSP_SUCCESS) while(1);
+                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &g_spi0_cfg);
+                      if (status != FSP_SUCCESS) while(1);
+                      sampleData_DLHR_2 = false;
+                      sensorSampleState = 0;
+                      busBusy_SPI = false;
+                      sensorSampleState = 0;
+                      break;
+                  default:
+                      break;
+              }
+          }
+
           if (sampleData_Barometer == true) {
               switch (sensorSampleState) {
                   case 0:
@@ -516,7 +569,7 @@ void hal_entry (void)
                       //SendString("0", (uint16_t)1, StripZeros, AddCRLF);
                       break;
                   case 1:  // Sensor 2
-//                      sampleData_DLHR_2 = true;
+                      sampleData_DLHR_2 = true;
                       sensorSelectState = 2;
                       //SendString("1", (uint16_t)1, StripZeros, AddCRLF);
                       break;
@@ -526,7 +579,7 @@ void hal_entry (void)
                       //SendString("2", (uint16_t)1, StripZeros, AddCRLF);
                       break;
                   case 3: // Barometric Sensor
-//                      sampleData_Barometer = true;
+                      sampleData_Barometer = true;
                       sensorSelectState = 0;
                       //SendString("3", (uint16_t)1, StripZeros, AddCRLF);
                        break;
@@ -650,7 +703,6 @@ void iica_master_callback(i2c_master_callback_args_t *p_args)
 
 void sau_spi_callback(spi_callback_args_t *p_args)
 {
-    p_args->event;
     transferNotComplete = 0;
 }
 

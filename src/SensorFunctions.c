@@ -64,6 +64,7 @@ uint8_t AddSensorUint16Value(sensor_data_t * _raw_sensor_data, uint16_t _new_dat
 
     _raw_sensor_data->data.average = (uint16_t)_raw_sensor_data->data.total / SENSOR_HISTORY_LENGTH;
 
+    _raw_sensor_data->data.lastValue = _raw_sensor_data->data.nextValue;
     _raw_sensor_data->data.nextValue++;
     if(_raw_sensor_data->data.nextValue >= SENSOR_HISTORY_LENGTH) _raw_sensor_data->data.nextValue = 0;
 
@@ -81,6 +82,7 @@ uint8_t AddSensorInt16Value(sensor_data_t * _raw_sensor_data, int16_t _new_data)
 
     _raw_sensor_data->data.average = (uint16_t)_raw_sensor_data->data.total / SENSOR_HISTORY_LENGTH;
 
+    _raw_sensor_data->data.lastValue = _raw_sensor_data->data.nextValue;
     _raw_sensor_data->data.nextValue++;
     if(_raw_sensor_data->data.nextValue >= SENSOR_HISTORY_LENGTH) _raw_sensor_data->data.nextValue = 0;
 
@@ -97,6 +99,7 @@ uint8_t AddSensorInt32Value(sensor_data_t * _raw_sensor_data, int32_t _new_data)
 
     _raw_sensor_data->data.average = (uint16_t)_raw_sensor_data->data.total / SENSOR_HISTORY_LENGTH;
 
+    _raw_sensor_data->data.lastValue = _raw_sensor_data->data.nextValue;
     _raw_sensor_data->data.nextValue++;
     if(_raw_sensor_data->data.nextValue >= SENSOR_HISTORY_LENGTH) _raw_sensor_data->data.nextValue = 0;
 
