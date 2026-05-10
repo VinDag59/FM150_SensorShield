@@ -39,10 +39,10 @@ void sau_spi_callback(spi_callback_args_t *p_args);
     bsp_io_level_t pin_level = BSP_IO_LEVEL_LOW; /* Holds level to set for pins */
 
     //sensor_data_t pressureSensor;
-    sensor_data_t pressureSensor1;
-    sensor_data_t pressureSensor2;
-    sensor_data_t pressureSensor3;
-    sensor_data_t pressureSensorBarometer;
+    sensor_data_int32_t pressureSensor1;
+    sensor_data_int32_t pressureSensor2;
+    sensor_data_int32_t pressureSensor3;
+    se_sensor_data_t pressureSensorBarometer;
 
     sensor_data_t temperatureSensor;
     sensor_data_t humiditySensor;
@@ -55,6 +55,9 @@ void sau_spi_callback(spi_callback_args_t *p_args);
     const sensor_data_t initValues1 = {.byteAccess ={1,0, 1,0, 1,0, 1,0, 1,0, 1,0, 1,0, 1,0,  8,0,0,0, 1,0, 0}};
     const sensor_data_t initValues2 = {.byteAccess ={2,0, 2,0, 2,0, 2,0, 2,0, 2,0, 2,0, 2,0, 16,0,0,0, 2,0, 0}};
     const sensor_data_t initValues3 = {.byteAccess ={3,0, 3,0, 3,0, 3,0, 3,0, 3,0, 3,0, 3,0, 24,0,0,0, 3,0, 0}};
+    const sensor_data_t initValues0 = {.byteAccess ={0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0,0,0, 0,0, 0}};
+    const sensor_data_int32_t initValues0Int32 = {.byteAccess ={0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0,0,0, 0,0,0,0, 0}};
+    const se_sensor_data_t initSeValues0 = {.byteAccess ={0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0, 0,0,0,0, 0,0, 0}};
 
     uint8_t sensorStateMachine = 0;
 
@@ -102,10 +105,18 @@ void sau_spi_callback(spi_callback_args_t *p_args);
     volatile uint8_t sampleData_DLHR_1 = false;
     volatile uint8_t sampleData_DLHR_2 = false;
     spi_cfg_t dlhr_spi0_cfg;
+    sau_spi_extended_cfg_t dlhr_spi0_ext_cfg;
     // Barometric Sensor
+    union {
+        uint8_t byteAccess[2];
+        uint16_t wordAccess;
+    } bar_convert;
+    uint8_t spiCmdGetDeviceID[2] = {0xE0, 0x00};
     uint8_t spiCmdGetBarometricPressure[2] = {0x20, 0x00};
+    uint8_t spiCmdGetTemp[2] = {0x40, 0x00};
     volatile uint8_t sampleData_Barometer = false;
     spi_cfg_t bar_spi0_cfg;
+    sau_spi_extended_cfg_t bar_spi0_ext_cfg;
     // Honeywell Sensor
     uint8_t hw_readEEPROM[2] = {0x03, 0x00};
     uint8_t hw_readEEPROM_ADC_Comp[2] = {0x03, 0x3C};
@@ -119,6 +130,8 @@ void sau_spi_callback(spi_callback_args_t *p_args);
     uint8_t hw_ADC_COMP[4];
     uint8_t init_hw_sensor = true;
     uint8_t sampleData_HW = false;
+    spi_cfg_t hw_spi0_cfg;
+    sau_spi_extended_cfg_t hw_spi0_ext_cfg;
     // General
     uint8_t spiReadSensorData[7] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     uint8_t sensorSampleState = 0;
@@ -126,6 +139,8 @@ void sau_spi_callback(spi_callback_args_t *p_args);
     uint8_t sensorSelectState = 0;
     volatile uint8_t transferNotComplete;
     volatile uint8_t i;
+    extern sau_spi_extended_cfg_t g_spi0_cfg_extend;
+    volatile uint16_t fred;
 
     // UART Stuff
     char msg_str[50] = "";
@@ -164,12 +179,33 @@ void hal_entry (void)
 
     // Set up & Start SPI
     //status = R_SAU_SPI_Open(&g_spi0_ctrl, &g_spi0_cfg);
+    #define SPI_CLK_IDLE_HIGH 0
+    #define SPI_CLK_IDLE_LOW 1
+    #define SPI_DATA_SAMPLE_ODD_EDGE 0
+    #define SPI_DATA_SAMPLE_EVEN_EDGE 1
     memcpy(&bar_spi0_cfg, &g_spi0_cfg, sizeof(g_spi0_cfg));
-    bar_spi0_cfg.clk_phase = SPI_CLK_PHASE_EDGE_EVEN;
+    bar_spi0_cfg.clk_phase = SPI_CLK_PHASE_EDGE_ODD;
     bar_spi0_cfg.clk_polarity = SPI_CLK_POLARITY_LOW;
+    memcpy(&bar_spi0_ext_cfg, &g_spi0_cfg_extend, sizeof(g_spi0_cfg_extend));
+    bar_spi0_cfg.p_extend = &bar_spi0_ext_cfg;
+    bar_spi0_ext_cfg.clock_phase = SPI_CLK_IDLE_LOW;
+    bar_spi0_ext_cfg.data_phase = SPI_DATA_SAMPLE_ODD_EDGE;
+
     memcpy(&dlhr_spi0_cfg, &g_spi0_cfg, sizeof(g_spi0_cfg));
-    dlhr_spi0_cfg.clk_phase = SPI_CLK_PHASE_EDGE_EVEN;
+    dlhr_spi0_cfg.clk_phase = SPI_CLK_PHASE_EDGE_ODD;
     dlhr_spi0_cfg.clk_polarity = SPI_CLK_POLARITY_LOW;
+    memcpy(&dlhr_spi0_ext_cfg, &g_spi0_cfg_extend, sizeof(g_spi0_cfg_extend));
+    dlhr_spi0_cfg.p_extend = &dlhr_spi0_ext_cfg;
+    dlhr_spi0_ext_cfg.clock_phase = SPI_CLK_IDLE_LOW; //1;
+    dlhr_spi0_ext_cfg.data_phase = SPI_DATA_SAMPLE_ODD_EDGE; //0;
+
+    memcpy(&hw_spi0_cfg, &g_spi0_cfg, sizeof(g_spi0_cfg));
+    hw_spi0_cfg.clk_phase = SPI_CLK_PHASE_EDGE_ODD;
+    hw_spi0_cfg.clk_polarity = SPI_CLK_POLARITY_LOW;
+    memcpy(&hw_spi0_ext_cfg, &g_spi0_cfg_extend, sizeof(g_spi0_cfg_extend));
+    hw_spi0_cfg.p_extend = &hw_spi0_ext_cfg;
+    hw_spi0_ext_cfg.clock_phase = SPI_CLK_IDLE_LOW; //1;
+    hw_spi0_ext_cfg.data_phase = SPI_DATA_SAMPLE_ODD_EDGE; //0;
 
 
     // UART Hello World, so to speak
@@ -178,10 +214,11 @@ void hal_entry (void)
     SendString(FW_REV__BUILT, (uint16_t)strlen(FW_REV__BUILT), StripZeros, NoAddCRLF);
 
 
-    InitSensor(&pressureSensor1, &initValues1);
-    InitSensor(&temperatureSensor, &initValues2);
-    InitSensor(&humiditySensor, &initValues3);
-    InitSensor(&pressureSensorBarometer, &initValues1);
+    InitSensorInt32(&pressureSensor1, &initValues0Int32);
+    InitSensorInt32(&pressureSensor2, &initValues0Int32);
+    InitSensor(&temperatureSensor, &initValues0);
+    InitSensor(&humiditySensor, &initValues0);
+    InitSeSensor(&pressureSensorBarometer, &initSeValues0);
 
     ParseParamsToUINT16(&testPacket[3], testUINT16Array, 6);
 
@@ -323,9 +360,9 @@ void hal_entry (void)
               switch (sensorSampleState) {
                   case 0:
                       status = R_SAU_SPI_Close(&g_spi0_ctrl);
-                      if (status != FSP_SUCCESS) while(1);
+                      //if ((status != FSP_SUCCESS) && (status != FSP_ERR_NOT_OPEN)) while(1);
                       status = R_SAU_SPI_Open(&g_spi0_ctrl, &dlhr_spi0_cfg);
-                      if (status != FSP_SUCCESS) while(1);
+                      //if (status != FSP_SUCCESS) while(1);
                       sensorSampleState++;
                       break;
                   case 1:
@@ -359,11 +396,10 @@ void hal_entry (void)
                       break;
                   case 8:
                       status = R_SAU_SPI_Close(&g_spi0_ctrl);
-                      if (status != FSP_SUCCESS) while(1);
+                      //if ((status != FSP_SUCCESS) && (status != FSP_ERR_NOT_OPEN)) while(1);
                       status = R_SAU_SPI_Open(&g_spi0_ctrl, &g_spi0_cfg);
-                      if (status != FSP_SUCCESS) while(1);
+                      //if (status != FSP_SUCCESS) while(1);
                       sampleData_DLHR_1 = false;
-                      sensorSampleState = 0;
                       busBusy_SPI = false;
                       sensorSampleState = 0;
                       break;
@@ -371,6 +407,7 @@ void hal_entry (void)
                       break;
               }
           }
+
 
           if (sampleData_DLHR_2 == true) {
               switch (sensorSampleState) {
@@ -425,6 +462,7 @@ void hal_entry (void)
               }
           }
 
+
           if (sampleData_Barometer == true) {
               switch (sensorSampleState) {
                   case 0:
@@ -438,7 +476,7 @@ void hal_entry (void)
                       sensorSampleState = 2;
                       break;
                   case 2:
-                      status = R_SAU_SPI_Write(&g_spi0_ctrl, spiCmdGetBarometricPressure, 2, SPI_BIT_WIDTH_8_BITS);
+                      status = R_SAU_SPI_WriteRead(&g_spi0_ctrl, spiCmdGetBarometricPressure, spiReadSensorData, 2, SPI_BIT_WIDTH_8_BITS);
                       sensorSampleState = 3;
                       break;
                   case 3:
@@ -446,29 +484,19 @@ void hal_entry (void)
                       sensorSampleState = 4;
                       break;
                   case 4:
-                      SENSOR_BAROMETER_SS = SS_ASSERTED;
+                      status = R_SAU_SPI_Close(&g_spi0_ctrl);
+                      //if (status != FSP_SUCCESS) while(1);
+                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &g_spi0_cfg);
+                      //if (status != FSP_SUCCESS) while(1);
                       sensorSampleState = 5;
                       break;
                   case 5:
-                      status = R_SAU_SPI_WriteRead(&g_spi0_ctrl, spiCmdGetBarometricPressure, spiReadSensorData, 2, SPI_BIT_WIDTH_8_BITS);
+                      bar_convert.byteAccess[0] = spiReadSensorData[1];
+                      bar_convert.byteAccess[1] = spiReadSensorData[0];
+                      AddSensorUint16Value(&pressureSensorBarometer, ((bar_convert.wordAccess >> 1) & 0x0FFF));
                       sensorSampleState = 6;
                       break;
                   case 6:
-                      SENSOR_BAROMETER_SS = SS_DEASSERTED;
-                      sensorSampleState = 7;
-                      break;
-                  case 7:
-                      status = R_SAU_SPI_Close(&g_spi0_ctrl);
-                      if (status != FSP_SUCCESS) while(1);
-                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &g_spi0_cfg);
-                      if (status != FSP_SUCCESS) while(1);
-                      sensorSampleState = 8;
-                      break;
-                  case 8:
-                      AddSensorInt32Value(&pressureSensorBarometer, 4);
-                      sensorSampleState = 9;
-                      break;
-                  case 9:
                       sampleData_Barometer = false;
                       sensorSampleState = 0;
                       busBusy_SPI = false;
@@ -477,6 +505,7 @@ void hal_entry (void)
                       break;
               }
           }
+
 
           if (sampleData_HW == true) {
               switch (sensorSampleState) {
