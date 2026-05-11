@@ -145,6 +145,9 @@ void sau_spi_callback(spi_callback_args_t *p_args);
     // UART Stuff
     char msg_str[50] = "";
 
+    // Blower Stuff
+    uint8_t blowerPWM = 40;
+
 
 /*******************************************************************************************************************//**
  * @brief  Blinky example application
@@ -176,6 +179,11 @@ void hal_entry (void)
 
     // Start I2C
     err = R_IICA_MASTER_Open(&g_iica_master0_ctrl, &g_iica_master0_cfg);
+
+    // start PWM timer
+    status = R_TAU_PWM_Open(&g_timer0_ctrl, &g_timer0_cfg);
+    status = R_TAU_PWM_Start(&g_timer0_ctrl);
+
 
     // Set up & Start SPI
     //status = R_SAU_SPI_Open(&g_spi0_ctrl, &g_spi0_cfg);
@@ -353,7 +361,6 @@ void hal_entry (void)
                       break;
               }
           }
-
 
 
           if (sampleData_DLHR_1 == true) {
@@ -580,6 +587,16 @@ void hal_entry (void)
 
           keyCode = ScanKeyboard();
 
+          if (keyCode != NO_KEY_PRESSED) {
+              if (keyPress != true) {
+                  keyPress = true;
+                  ProcessKeyCode(keyCode);
+              }
+          }
+          else {
+                  keyPress = false;
+          }
+
         }  // end of 25mS Tasks
         //---------------------------------
 
@@ -626,14 +643,11 @@ void hal_entry (void)
         if (one_S_Flag) {
           one_S_Flag = false;
 
-//          R_PORT0->PODR_b.PODR8 = pin_level;
-//          R_PORT0->PODR_b.PODR9 = pin_level;
-//
-          R_PORT0->PODR_b.PODR11 = pin_level;
+          SHIELD_MOUNTED_HEARTBEAT_LED = pin_level;
 
-          R_PORT2->PODR_b.PODR1 = pin_level;
-          R_PORT1->PODR_b.PODR1 = pin_level;
-          R_PORT1->PODR_b.PODR2 = pin_level;
+//          SHIELD_MOUNTED_LED1 = pin_level;
+//          SHIELD_MOUNTED_LED2 = pin_level;
+//          SHIELD_MOUNTED_LED3 = pin_level;
 
 
 

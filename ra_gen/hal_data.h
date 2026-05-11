@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include "bsp_api.h"
 #include "common_data.h"
+#include "r_tau_pwm.h"
+#include "r_timer_api.h"
 #include "r_sau_spi.h"
 #include "r_spi_api.h"
 #include "r_iica_master.h"
@@ -11,6 +13,16 @@
 #include "r_uarta.h"
 #include "r_uart_api.h"
 FSP_HEADER
+/** TAU PWM Timer Instance */
+extern const timer_instance_t g_timer0;
+
+/** Access the TAU PWM instance using these structures when calling API functions directly (::p_api is not used). */
+extern tau_pwm_instance_ctrl_t g_timer0_ctrl;
+extern const timer_cfg_t g_timer0_cfg;
+
+#ifndef NULL
+void NULL(timer_callback_args_t *p_args);
+#endif
 /** SPI on SAU Instance. */
 extern const spi_instance_t g_spi0;
 

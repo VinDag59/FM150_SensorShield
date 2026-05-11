@@ -21,7 +21,7 @@
 
 #define FW_REV_HI "00"
 #define FW_REV_LOW "03"
-#define FW_REV_REL "01"
+#define FW_REV_REL "08"
 
 #define FW_REV__BUILT "FW v" FW_REV_HI "." FW_REV_LOW "." FW_REV_REL "\r\n"
 #define FW_REV_PACKET_BUILT "$f" FW_REV_HI "." FW_REV_LOW "." FW_REV_REL "\n\r\n"
@@ -33,8 +33,14 @@
 #define MIN_TIME 4
 
 #define BLUE_LED_INDEX 0
+#define SHIELD_MOUNTED_LED1 R_PORT2->PODR_b.PODR1 // D5
+#define SHIELD_MOUNTED_LED2 R_PORT2->PODR_b.PODR1 // D6
+#define SHIELD_MOUNTED_LED3 R_PORT1->PODR_b.PODR2 // D7
+#define SHIELD_MOUNTED_HEARTBEAT_LED R_PORT0->PODR_b.PODR11
 
 #define  BOARD_MOUNTED_SWITCH R_PORT2->PIDR_b.PIDR0
+#define SHIELD_MOUNTED_SW1
+#define SHIELD_MOUNTED_SW2
 
 #define DEFAULT_SER_NO "SNxxxxxx"
 #define DEFAULT_MODEL_NAME "APC Sensor Shield\r\n"

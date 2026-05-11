@@ -5,12 +5,20 @@
 
 #include "bsp_api.h"
 #include "SimpleKeyboard.h"
+#include "r_tau_pwm.h"
+#include "r_timer_api.h"
+#include <string.h>
+#include <stdio.h>
 
 
 
 #define USE_KBD_ENUM 0
 #define PROCESS_KEY_INLINE 0
 
+
+extern uint8_t keyPress;
+extern uint8_t blowerPWM;
+extern tau_pwm_instance_ctrl_t g_timer0_ctrl;
 
 #if (USE_KBD_ENUM)
 typedef enum _key_names_ {

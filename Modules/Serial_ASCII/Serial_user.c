@@ -39,6 +39,9 @@
 #include <string.h>
 #include <stdio.h>
 #include "SensorFunctions.h"
+#include "r_tau_pwm.h"
+#include "r_timer_api.h"
+
 
 
 // packet management
@@ -64,6 +67,8 @@ extern sensor_data_t temperatureSensor;
 extern sensor_data_t humiditySensor;
 extern uint8_t nozzleNo;
 extern uint8_t buttonPushed;
+extern uint8_t blowerPWM;
+extern tau_pwm_instance_ctrl_t g_timer0_ctrl;
 
 
 //Comm Control variables
@@ -114,6 +119,7 @@ uint8_t ProcessPacket(void)
 {
     uint8_t errorCode = 0;
     uint16_t tempValue;
+    timer_info_t info;
     char message[50];
 
 
@@ -139,35 +145,25 @@ uint8_t ProcessPacket(void)
             SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
         }
         break;
-//    case 'n':     // n<sensor> = new sensor value
-//    case 'N':
-//        switch (packetBuffer[PARAMETER_START_LOCATION]) {
-//        case '0': // pressure sensor
-//            errorCode = ConvertASCII2UINT16((char*)&packetBuffer[PARAMETER_START_LOCATION +1], 5, '\n', &tempValue);
-//            if (errorCode == 0) {
-//               AddSensorUint16Value(&pressureSensor, tempValue);
-//               sprintf(message, "$n0%d\n", tempValue);
-//               SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
-//            }
-//            break;
-//        case '1': // temperature sensor
-//            errorCode = ConvertASCII2UINT16((char*)&packetBuffer[PARAMETER_START_LOCATION +1], 5, '\n', &tempValue);
-//            if (errorCode == 0) {
-//               AddSensorUint16Value(&temperatureSensor, tempValue);
-//               sprintf(message, "$n0%d\n", tempValue);
-//               SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
-//            }
-//            break;
-//        case '3': // humidity sensor
-//            errorCode = ConvertASCII2UINT16((char*)&packetBuffer[PARAMETER_START_LOCATION +1], 5, '\n', &tempValue);
-//            if (errorCode == 0) {
-//               AddSensorUint16Value(&humiditySensor, tempValue);
-//               sprintf(message, "$n0%d\n", tempValue);
-//               SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
-//            }
-//            break;
-//        }
-//        break;
+    case 'p':
+    case 'P':
+        errorCode = ConvertASCII2UINT16((char*)&packetBuffer[PARAMETER_START_LOCATION], 5, '\n', &tempValue);
+//        tempValue += blowerPWM;
+        if ((tempValue >= 40) && (tempValue <= 90)) {
+            blowerPWM = (uint8_t)tempValue;
+
+           // change the value of the PWM
+           /* Get the current period setting. */
+           R_TAU_PWM_InfoGet(&g_timer0_ctrl, &info);
+           uint32_t current_period_counts = info.period_counts;
+           /* Calculate the desired duty cycle based on the current period. */
+           uint16_t duty_cycle_counts = (uint16_t) ((current_period_counts * blowerPWM) / 100);
+           /* Set the calculated duty cycle. */
+           R_TAU_PWM_DutyCycleSet(&g_timer0_ctrl, duty_cycle_counts, TAU_PWM_IO_PIN_CHANNEL_5);
+        }
+       sprintf(message, "$p%d\n", blowerPWM);
+       SendString(message, (uint16_t)strlen(message), StripZeros, NoAddCRLF);
+        break;
     case 'r':
     case 'R':
         switch (packetBuffer[PARAMETER_START_LOCATION]) {

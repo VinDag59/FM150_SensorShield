@@ -63,7 +63,7 @@ FSP Configuration
     HOCO Div /1
     MOCO Div /1
     ICLK Src: HOCO
-    TAU CK00 Div /1
+    TAU CK00 Div /512
     TAU CK01 Div /1
     TAU CK02 Div /2
     TAU CK03 Div /256
@@ -98,7 +98,7 @@ FSP Configuration
       P110 19 GPIO PMOD2_SDA_ARDUINO_D9 - - "Output mode (Initial High)" - - "IICA0: SCLA0; IRQ: IRQ3; SAU_I2C20: SDA20; SAU_SPI20: SI20; SAU_UART2: RXD2; TAU01: TI01; TAU01: TO01; UARTA: RXDA" - IO - - 
       P112 20 GPIO PMOD2_SCL_ARDUINO_D10 - - "Output mode (Initial High)" - - "IRQ: IRQ2; SAU_I2C20: SCL20; SAU_SPI00: SSI00; SAU_SPI20: SCK20; TAU03: TI03; TAU03: TO03" - IO - - 
       P200 15 IRQ_IRQ0 SW - IRQ0 "IRQ mode" - - "IRQ: IRQ0" ARDUINO_D2 I - - 
-      P201 14 GPIO PMOD1_INT_ARDUINO_D3 - - "Output mode (Initial High)" - - "CGC: PCLBUZ0; IRQ: IRQ5; RTC: RTCOUT; SAU_I2C11: SCL11; SAU_SPI00: SSI00; SAU_SPI11: SCK11; TAU05: TI05; TAU05: TO05" - IO - - 
+      P201 14 TAU05_TO05 PMOD1_INT_ARDUINO_D3 - None "Peripheral mode" - - "CGC: PCLBUZ0; IRQ: IRQ5; RTC: RTCOUT; SAU_I2C11: SCL11; SAU_SPI00: SSI00; SAU_SPI11: SCK11; TAU05: TI05; TAU05: TO05" - O - - 
       P206 13 SYSTEM_RES RES - - "Peripheral mode" - - "SYSTEM: RES" ARDUINO_RESET IO - - 
       P207 12 UARTA_RXDA ARDUINO_RX - None "Peripheral mode" - - "IRQ: IRQ2; TAU00: TO00; UARTA: RXDA" - I - - 
       P208 11 UARTA_TXDA ARDUINO_TX - None "Peripheral mode" - - "IRQ: IRQ3; TAU00: TI00; UARTA: TXDA" - O - - 
@@ -131,7 +131,7 @@ FSP Configuration
       P110 19 - PMOD2_SDA_ARDUINO_D9 - - Disabled - - "IICA0: SCLA0; IRQ: IRQ3; SAU_I2C20: SDA20; SAU_SPI20: SI20; SAU_UART2: RXD2; TAU01: TI01; TAU01: TO01; UARTA: RXDA" - IO - - 
       P112 20 - PMOD2_SCL_ARDUINO_D10 - - Disabled - - "IRQ: IRQ2; SAU_I2C20: SCL20; SAU_SPI00: SSI00; SAU_SPI20: SCK20; TAU03: TI03; TAU03: TO03" - IO - - 
       P200 15 - SW - None Disabled - - "IRQ: IRQ0" ARDUINO_D2 I - - 
-      P201 14 - PMOD1_INT_ARDUINO_D3 - - Disabled - - "CGC: PCLBUZ0; IRQ: IRQ5; RTC: RTCOUT; SAU_I2C11: SCL11; SAU_SPI00: SSI00; SAU_SPI11: SCK11; TAU05: TI05; TAU05: TO05" - IO - - 
+      P201 14 - PMOD1_INT_ARDUINO_D3 - None Disabled - - "CGC: PCLBUZ0; IRQ: IRQ5; RTC: RTCOUT; SAU_I2C11: SCL11; SAU_SPI00: SSI00; SAU_SPI11: SCK11; TAU05: TI05; TAU05: TO05" - O - - 
       P206 13 - RES - - Disabled - - "SYSTEM: RES" ARDUINO_RESET IO - - 
       P207 12 - ARDUINO_RX - None Disabled - - "IRQ: IRQ2; TAU00: TO00; UARTA: RXDA" - I - - 
       P208 11 - ARDUINO_TX - None Disabled - - "IRQ: IRQ3; TAU00: TI00; UARTA: TXDA" - O - - 
@@ -180,6 +180,13 @@ FSP Configuration
     Multiple Slave Compatibility Mode: Disabled
     Continuous Transfer Mode: Enabled
     
+  Module "Timer, Simultaneous Channel Operation (r_tau_pwm)"
+    Parameter Checking: Default (BSP)
+    One-shot Pulse Output Mode Support: Disabled
+    PWM Output Mode Support: Enabled
+    Multi-Slave: Disabled
+    
+  Module "TAU PWM Channel  Configuration (r_tau_pwm)"
   HAL
     Instance "g_ioport I/O Port (r_ioport)"
       Name: g_ioport
@@ -231,3 +238,24 @@ FSP Configuration
       Callback: sau_spi_callback
       Transmit End Interrupt Priority: Priority 2
       
+    Instance "g_timer0 Timer, Simultaneous Channel Operation (r_tau_pwm)"
+      General: Name: g_timer0
+      General: Operation Clock: CK00
+      General: Mode: PWM output
+      General: Master Channel: 0
+      General: Period: 500
+      General: Period Unit: Milliseconds
+      Input (One-shot pulse): Trigger Source: TI0n pin
+      Input (One-shot pulse): Detect Edge: Falling Edge
+      Interrupts: Callback: NULL
+      Interrupts: Interrupt Priority: Priority 2
+      
+      Instance "TAU PWM Channel 5 Configuration (r_tau_pwm)"
+        General: Channel: 5
+        Output: Output Level: Start Level Low
+        Output: Output Polarity: Active-high
+        Output: One-Shot Pulse Width: 0xffff
+        Output: One-Shot Pulse Width Unit: Raw Counts
+        Output: PWM Duty Cycle Percent: 40
+        Interrupts: Interrupt Priority: Disabled
+        

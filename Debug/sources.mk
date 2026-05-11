@@ -66,6 +66,7 @@ ra/fsp/src/bsp/mcu/ra0e1 \
 ra/fsp/src/r_iica_master \
 ra/fsp/src/r_ioport \
 ra/fsp/src/r_sau_spi \
+ra/fsp/src/r_tau_pwm \
 ra/fsp/src/r_uarta \
 ra_gen \
 src \

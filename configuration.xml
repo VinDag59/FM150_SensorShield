@@ -98,7 +98,7 @@
     <node id="board.clock.loco.freq" option="board.clock.loco.freq.32768"/>
     <node id="board.clock.iclk.source" option="board.clock.iclk.source.hoco"/>
     <node id="board.clock.iclk.display" option="board.clock.iclk.display.value"/>
-    <node id="board.clock.tau.ck00.div" option="board.clock.tau.ck00.div.1"/>
+    <node id="board.clock.tau.ck00.div" option="board.clock.tau.ck00.div.512"/>
     <node id="board.clock.tau.ck00.display" option="board.clock.tau.ck00.display.value"/>
     <node id="board.clock.tau.ck01.div" option="board.clock.tau.ck01.div.1"/>
     <node id="board.clock.tau.ck01.display" option="board.clock.tau.ck01.display.value"/>
@@ -181,6 +181,10 @@
       <description>Serial Peripheral Interface on Serial Array Unit</description>
       <originalPack>Renesas.RA.6.0.0.pack</originalPack>
     </component>
+    <component apiversion="" class="HAL Drivers" condition="" group="all" subgroup="r_tau_pwm" variant="" vendor="Renesas" version="6.0.0">
+      <description>Timer Array Unit (Simultaneous Channel Operation)</description>
+      <originalPack>Renesas.RA.6.0.0.pack</originalPack>
+    </component>
   </raComponentSelection>
   <raElcConfiguration/>
   <raIcuConfiguration/>
@@ -236,16 +240,46 @@
       <property id="module.driver.spi.p_callback" value="sau_spi_callback"/>
       <property id="module.driver.spi.tei_ipl" value="board.icu.common.irq.priority2"/>
     </module>
+    <module id="module.driver.timer_on_tau_pwm.1798538380">
+      <property id="module.driver.timer.name" value="g_timer0"/>
+      <property id="module.driver.timer.operation_clock" value="module.driver.timer.operation_clock.CK00"/>
+      <property id="module.driver.timer.mode" value="module.driver.timer.mode.pwm"/>
+      <property id="module.driver.timer.master_channel" value="0"/>
+      <property id="module.driver.timer.period" value="500"/>
+      <property id="module.driver.timer.unit" value="module.driver.timer.unit.unit_period_msec"/>
+      <property id="module.driver.timer.trigger_source" value="module.driver.tau_pwm.trigger_source.input_pin"/>
+      <property id="module.driver.timer.detect_edge" value="module.driver.timer.detect_edge._rising"/>
+      <property id="module.driver.timer.p_callback" value="NULL"/>
+      <property id="module.driver.timer.master_ipl" value="board.icu.common.irq.priority2"/>
+    </module>
+    <module id="module.driver.timer_channel.762254580">
+      <property id="module.driver.timer.slave_channel" value="5"/>
+      <property id="module.driver.timer.output_level" value="module.driver.timer.output_level.low_level"/>
+      <property id="module.driver.timer.output_polarity" value="module.driver.timer.output_polarity.positive"/>
+      <property id="module.driver.timer.pulse_width" value="0xffff"/>
+      <property id="module.driver.timer.pulse_width_unit" value="module.driver.timer.pulse_width_unit.unit_period_raw_counts"/>
+      <property id="module.driver.timer.duty_cycle" value="40"/>
+      <property id="module.driver.timer.slave_ipl" value="_disabled"/>
+    </module>
     <context id="_hal.0">
       <stack module="module.driver.ioport_on_ioport.0"/>
       <stack module="module.driver.uart_on_uarta.1033422784"/>
       <stack module="module.driver.iica_on_iica_master.1719236836"/>
       <stack module="module.driver.spi_on_sau_spi.1169870602"/>
+      <stack module="module.driver.timer_on_tau_pwm.1798538380">
+        <stack module="module.driver.timer_channel.762254580" requires="module.driver.timer.requires.slave1"/>
+      </stack>
     </context>
     <config id="config.driver.iica_master">
       <property id="config.driver.iica_master.param_checking_enable" value="config.driver.iica_master.param_checking_enable.bsp"/>
       <property id="config.driver.iica_master.addr_mode_10_bit_enable" value="config.driver.iica_master.addr_mode_10_bit_enable.disabled"/>
       <property id="config.driver.iica_master.single_channel" value="config.driver.iica.channel.0"/>
+    </config>
+    <config id="config.driver.tau_pwm">
+      <property id="config.driver.tau_pwm.param_checking_enable" value="config.driver.tau_pwm.param_checking_enable.bsp"/>
+      <property id="config.driver.tau_pwm.one_shot_support" value="config.driver.tau_pwm.one_shot_support.disabled"/>
+      <property id="config.driver.tau_pwm.pwm_support" value="config.driver.tau_pwm.pwm_support.enabled"/>
+      <property id="config.driver.tau_pwm.multi_slave" value="config.driver.tau_pwm.multi_slave.disabled"/>
     </config>
     <config id="config.driver.uarta">
       <property id="config.driver.uarta.param_checking_enable" value="config.driver.uarta.param_checking_enable.bsp"/>
@@ -350,8 +384,8 @@
       <configSetting altId="p200.irq.irq0" configurationId="p200"/>
       <configSetting altId="p200.gpio_irq.gpio_irq_enabled" configurationId="p200.gpio_irq"/>
       <configSetting altId="p200.gpio_mode.gpio_mode_irq" configurationId="p200.gpio_mode"/>
-      <configSetting altId="p201.output.high" configurationId="p201"/>
-      <configSetting altId="p201.gpio_mode.gpio_mode_out.high" configurationId="p201.gpio_mode"/>
+      <configSetting altId="p201.tau05.to05" configurationId="p201"/>
+      <configSetting altId="p201.gpio_mode.gpio_mode_peripheral" configurationId="p201.gpio_mode"/>
       <configSetting altId="p206.system.res" configurationId="p206"/>
       <configSetting altId="p206.gpio_mode.gpio_mode_peripheral" configurationId="p206.gpio_mode"/>
       <configSetting altId="p207.uarta.rxda" configurationId="p207"/>
@@ -381,6 +415,8 @@
       <configSetting altId="system.mode.custom.free" configurationId="system.mode"/>
       <configSetting altId="system.res.p206" configurationId="system.res"/>
       <configSetting altId="system.vrefh0.p010" configurationId="system.vrefh0"/>
+      <configSetting altId="tau05.mode.custom.free" configurationId="tau05.mode"/>
+      <configSetting altId="tau05.to05.p201" configurationId="tau05.to05"/>
       <configSetting altId="uarta.mode.enabled.free" configurationId="uarta.mode"/>
       <configSetting altId="uarta.rxda.p207" configurationId="uarta.rxda"/>
       <configSetting altId="uarta.txda.p208" configurationId="uarta.txda"/>
