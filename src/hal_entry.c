@@ -127,11 +127,13 @@ void sau_spi_callback(spi_callback_args_t *p_args);
     uint8_t hw_ADC_value[4];
     uint8_t hw_EEPROM_values[16] ="";
     uint8_t hw_EEPROM_pushOut[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    uint8_t hw_ADC_COMP[4];
+    uint8_t hw_ADC_COMP[5];
     uint8_t init_hw_sensor = true;
     uint8_t sampleData_HW = false;
     spi_cfg_t hw_spi0_cfg;
     sau_spi_extended_cfg_t hw_spi0_ext_cfg;
+    spi_cfg_t hw_ee_spi0_cfg;
+    sau_spi_extended_cfg_t hw_ee_spi0_ext_cfg;
     // General
     uint8_t spiReadSensorData[7] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     uint8_t sensorSampleState = 0;
@@ -208,12 +210,21 @@ void hal_entry (void)
     dlhr_spi0_ext_cfg.data_phase = SPI_DATA_SAMPLE_ODD_EDGE; //0;
 
     memcpy(&hw_spi0_cfg, &g_spi0_cfg, sizeof(g_spi0_cfg));
-    hw_spi0_cfg.clk_phase = SPI_CLK_PHASE_EDGE_ODD;
+    hw_spi0_cfg.clk_phase = SPI_CLK_PHASE_EDGE_EVEN;
     hw_spi0_cfg.clk_polarity = SPI_CLK_POLARITY_LOW;
     memcpy(&hw_spi0_ext_cfg, &g_spi0_cfg_extend, sizeof(g_spi0_cfg_extend));
     hw_spi0_cfg.p_extend = &hw_spi0_ext_cfg;
     hw_spi0_ext_cfg.clock_phase = SPI_CLK_IDLE_LOW; //1;
-    hw_spi0_ext_cfg.data_phase = SPI_DATA_SAMPLE_ODD_EDGE; //0;
+    hw_spi0_ext_cfg.data_phase = SPI_DATA_SAMPLE_EVEN_EDGE; //0;
+
+    memcpy(&hw_ee_spi0_cfg, &g_spi0_cfg, sizeof(g_spi0_cfg));
+    hw_ee_spi0_cfg.clk_phase = SPI_CLK_PHASE_EDGE_ODD;
+    hw_ee_spi0_cfg.clk_polarity = SPI_CLK_POLARITY_LOW;
+    memcpy(&hw_ee_spi0_ext_cfg, &g_spi0_cfg_extend, sizeof(g_spi0_cfg_extend));
+    hw_ee_spi0_cfg.p_extend = &hw_ee_spi0_ext_cfg;
+    hw_ee_spi0_ext_cfg.clock_phase = SPI_CLK_IDLE_LOW; //1;
+    hw_ee_spi0_ext_cfg.data_phase = SPI_DATA_SAMPLE_ODD_EDGE; //0;
+
 
 
     // UART Hello World, so to speak
@@ -266,7 +277,10 @@ void hal_entry (void)
 //            }
 //        }
 //    }
-#if (0)
+
+    status = R_SAU_SPI_Close(&g_spi0_ctrl);
+    status = R_SAU_SPI_Open(&g_spi0_ctrl, &hw_ee_spi0_cfg);
+
     SENSOR_3_EEPROM_SEL = SS_ASSERTED;
     R_BSP_SoftwareDelay(1, bsp_delay_units);
     status = R_SAU_SPI_Write(&g_spi0_ctrl, hw_readEEPROM_ADC_Comp, 2, SPI_BIT_WIDTH_8_BITS);
@@ -275,24 +289,29 @@ void hal_entry (void)
     R_BSP_SoftwareDelay(1, bsp_delay_units);
     SENSOR_3_EEPROM_SEL = SS_DEASSERTED;
     R_BSP_SoftwareDelay(1, bsp_delay_units);
-
+#if (1)
     status = R_SAU_SPI_Close(&g_spi0_ctrl);
-    status = R_SAU_SPI_Open(&g_spi0_ctrl, &bar_spi0_cfg);
+    status = R_SAU_SPI_Open(&g_spi0_ctrl, &hw_spi0_cfg);
+
     SENSOR_3_SS = SS_ASSERTED;
     R_BSP_SoftwareDelay(1, bsp_delay_units);
     status = R_SAU_SPI_Write(&g_spi0_ctrl, hw_reset_ADC, 1, SPI_BIT_WIDTH_8_BITS);
     R_BSP_SoftwareDelay(1, bsp_delay_units);
     SENSOR_3_SS = SS_DEASSERTED;
     R_BSP_SoftwareDelay(5, bsp_delay_units);
-    hw_ADC_COMP[0] = hw_EEPROM_values[1];
-    hw_ADC_COMP[1] = hw_EEPROM_values[3];
-    hw_ADC_COMP[2] = hw_EEPROM_values[5];
-    hw_ADC_COMP[3] = hw_EEPROM_values[7];
+
+    hw_ADC_COMP[0] = 0x43;
+    hw_ADC_COMP[1] = hw_EEPROM_values[1];
+    hw_ADC_COMP[2] = hw_EEPROM_values[3];
+    hw_ADC_COMP[3] = hw_EEPROM_values[5];
+    hw_ADC_COMP[4] = hw_EEPROM_values[7];
+
     SENSOR_3_SS = SS_ASSERTED;
     R_BSP_SoftwareDelay(1, bsp_delay_units);
-    status = R_SAU_SPI_Write(&g_spi0_ctrl, hw_ADC_COMP, 4, SPI_BIT_WIDTH_8_BITS);
+    status = R_SAU_SPI_Write(&g_spi0_ctrl, hw_ADC_COMP, 5, SPI_BIT_WIDTH_8_BITS);
     R_BSP_SoftwareDelay(1, bsp_delay_units);
     SENSOR_3_SS = SS_DEASSERTED;
+
     status = R_SAU_SPI_Close(&g_spi0_ctrl);
     status = R_SAU_SPI_Open(&g_spi0_ctrl, &g_spi0_cfg);
 #endif
@@ -320,6 +339,7 @@ void hal_entry (void)
                       break;
               }
           }
+
 
           if (writeEEPROM == true) {
               g_iica_master0_ctrl.slave = EEPROM_I2C_BUS_ADDRESS;
@@ -519,7 +539,7 @@ void hal_entry (void)
                   case 0:
                       busBusy_SPI = true;
                       status = R_SAU_SPI_Close(&g_spi0_ctrl);
-                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &bar_spi0_cfg);
+                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &hw_spi0_cfg);
                       sensorSampleState++;
                       break;
                   case 1:
