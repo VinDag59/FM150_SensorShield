@@ -21,7 +21,7 @@
 
 #define FW_REV_HI "00"
 #define FW_REV_LOW "03"
-#define FW_REV_REL "09"
+#define FW_REV_REL "10"
 
 #define FW_REV__BUILT "FW v" FW_REV_HI "." FW_REV_LOW "." FW_REV_REL "\r\n"
 #define FW_REV_PACKET_BUILT "$f" FW_REV_HI "." FW_REV_LOW "." FW_REV_REL "\n\r\n"

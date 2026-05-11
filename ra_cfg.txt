@@ -244,7 +244,7 @@ FSP Configuration
       General: Mode: PWM output
       General: Master Channel: 0
       General: Period: 500
-      General: Period Unit: Milliseconds
+      General: Period Unit: Hertz
       Input (One-shot pulse): Trigger Source: TI0n pin
       Input (One-shot pulse): Detect Edge: Falling Edge
       Interrupts: Callback: NULL

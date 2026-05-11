@@ -246,7 +246,7 @@
       <property id="module.driver.timer.mode" value="module.driver.timer.mode.pwm"/>
       <property id="module.driver.timer.master_channel" value="0"/>
       <property id="module.driver.timer.period" value="500"/>
-      <property id="module.driver.timer.unit" value="module.driver.timer.unit.unit_period_msec"/>
+      <property id="module.driver.timer.unit" value="module.driver.timer.unit.unit_frequency_hz"/>
       <property id="module.driver.timer.trigger_source" value="module.driver.tau_pwm.trigger_source.input_pin"/>
       <property id="module.driver.timer.detect_edge" value="module.driver.timer.detect_edge._rising"/>
       <property id="module.driver.timer.p_callback" value="NULL"/>
