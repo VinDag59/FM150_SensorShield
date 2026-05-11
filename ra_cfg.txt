@@ -243,7 +243,7 @@ FSP Configuration
       General: Operation Clock: CK00
       General: Mode: PWM output
       General: Master Channel: 0
-      General: Period: 500
+      General: Period: 600
       General: Period Unit: Hertz
       Input (One-shot pulse): Trigger Source: TI0n pin
       Input (One-shot pulse): Detect Edge: Falling Edge

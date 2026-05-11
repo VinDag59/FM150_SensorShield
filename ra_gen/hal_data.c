@@ -6,7 +6,7 @@ const tau_pwm_channel_cfg_t g_timer_channel_cfg5 =
 #if (OPERATION_TIMER_MODE_ONE_SHOT == OPERATION_TIMER_MODE_PWM)
     /* Actual pulse width: 1.04856 seconds. */  .duty_cycle_counts = (uint16_t) 0xffff,
 #else
-  /* Actual duty cycle percent: 40 %. */.duty_cycle_counts = (uint16_t) 0x32,
+  /* Actual duty cycle percent: 40 %. */.duty_cycle_counts = (uint16_t) 0x29,
 #endif
 #undef OPERATION_TIMER_MODE_ONE_SHOT
   .output_level = TAU_PWM_OUTPUT_LEVEL_LOW,
@@ -62,7 +62,7 @@ const tau_pwm_extended_cfg_t g_timer0_extend =
           } };
 const timer_cfg_t g_timer0_cfg =
 { .mode = TIMER_MODE_PWM,
-/* Actual pulse period: 0.002 seconds. */.period_counts = (uint32_t) 0x7d,
+/* Actual pulse period: 0.001664 seconds. */.period_counts = (uint32_t) 0x68,
   .source_div = (timer_source_div_t) BSP_CFG_TAU_CK00, .channel = 0, .p_callback = NULL,
   /** If NULL then do not add & */
 #if defined(NULL)
