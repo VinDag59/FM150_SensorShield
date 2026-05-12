@@ -148,7 +148,7 @@ void sau_spi_callback(spi_callback_args_t *p_args);
     char msg_str[50] = "";
 
     // Blower Stuff
-    uint8_t blowerPWM = 40;
+    uint16_t blowerPWM = 40;
 
 
 /*******************************************************************************************************************//**

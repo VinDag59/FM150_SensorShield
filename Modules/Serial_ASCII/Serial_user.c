@@ -67,7 +67,7 @@ extern sensor_data_t temperatureSensor;
 extern sensor_data_t humiditySensor;
 extern uint8_t nozzleNo;
 extern uint8_t buttonPushed;
-extern uint8_t blowerPWM;
+extern uint16_t blowerPWM;
 extern tau_pwm_instance_ctrl_t g_timer0_ctrl;
 
 
@@ -147,9 +147,9 @@ uint8_t ProcessPacket(void)
         break;
     case 'p':
     case 'P':
+        // units for blower PWM (blowerPWM) are 0.1%, so, 400 = 40%
         errorCode = ConvertASCII2UINT16((char*)&packetBuffer[PARAMETER_START_LOCATION], 5, '\n', &tempValue);
-//        tempValue += blowerPWM;
-        if ((tempValue >= 40) && (tempValue <= 90)) {
+        if ((tempValue >= 400) && (tempValue <= 980)) {
             blowerPWM = (uint8_t)tempValue;
 
            // change the value of the PWM
@@ -157,7 +157,7 @@ uint8_t ProcessPacket(void)
            R_TAU_PWM_InfoGet(&g_timer0_ctrl, &info);
            uint32_t current_period_counts = info.period_counts;
            /* Calculate the desired duty cycle based on the current period. */
-           uint16_t duty_cycle_counts = (uint16_t) ((current_period_counts * blowerPWM) / 100);
+           uint16_t duty_cycle_counts = (uint16_t) ((current_period_counts * blowerPWM) / 1000);
            /* Set the calculated duty cycle. */
            R_TAU_PWM_DutyCycleSet(&g_timer0_ctrl, duty_cycle_counts, TAU_PWM_IO_PIN_CHANNEL_5);
         }

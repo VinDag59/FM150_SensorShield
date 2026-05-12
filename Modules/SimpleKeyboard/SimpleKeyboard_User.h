@@ -17,7 +17,7 @@
 
 
 extern uint8_t keyPress;
-extern uint8_t blowerPWM;
+extern uint16_t blowerPWM;
 extern tau_pwm_instance_ctrl_t g_timer0_ctrl;
 
 #if (USE_KBD_ENUM)

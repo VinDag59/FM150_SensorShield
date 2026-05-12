@@ -41,7 +41,7 @@ uint8_t ProcessKeyCode(uint8_t _keys)
     keyboard_enum_t returnValue =  = NO_KEY_PRESSED;
 #else
      uint8_t returnValue = NO_KEY_PRESSED;
-     uint8_t tempVal = 0;
+     uint16_t tempVal = 0;
      timer_info_t info;
      volatile fsp_err_t err;
 #endif
@@ -54,8 +54,8 @@ uint8_t ProcessKeyCode(uint8_t _keys)
           strcpy(msg, "$K2\n");
           SendString(msg, (uint16_t)strlen(msg), StripZeros, NoAddCRLF);
 
-          tempVal = blowerPWM + 2;
-          if (tempVal <= 90) {
+          tempVal = blowerPWM + 20;
+          if (tempVal <= 980) {
               blowerPWM = tempVal;
 
              // change the value of the PWM
@@ -63,39 +63,27 @@ uint8_t ProcessKeyCode(uint8_t _keys)
              R_TAU_PWM_InfoGet(&g_timer0_ctrl, &info);
              uint32_t current_period_counts = info.period_counts;
              /* Calculate the desired duty cycle based on the current period. */
-             uint16_t duty_cycle_counts = (uint16_t) ((current_period_counts * blowerPWM) / 100);
+             uint16_t duty_cycle_counts = (uint16_t) ((current_period_counts * blowerPWM) / 1000);
              /* Set the calculated duty cycle. */
              err = R_TAU_PWM_DutyCycleSet(&g_timer0_ctrl, duty_cycle_counts, TAU_PWM_IO_PIN_CHANNEL_5);
-
-//             sprintf(msg, "$P%d\n", blowerPWM);
-//             SendString(msg, (uint16_t)strlen(msg), StripZeros, NoAddCRLF);
           }
           break;
       case 0x01: // sw2
           strcpy(msg, "$K1\n");
           SendString(msg, (uint16_t)strlen(msg), StripZeros, NoAddCRLF);
 
-          tempVal = blowerPWM - 2;
-          if (tempVal >= 40) {
+          tempVal = blowerPWM - 20;
+          if (tempVal >= 400) {
               blowerPWM = tempVal;
 
              // change the value of the PWM
-             //status = R_TAU_PWM_DutyCycleSet(&g_timer0_ctrl, duty_cycle_counts, pin);
               /* Get the current period setting. */
-
              R_TAU_PWM_InfoGet(&g_timer0_ctrl, &info);
              uint32_t current_period_counts = info.period_counts;
               /* Calculate the desired duty cycle based on the current period. */
-             uint16_t duty_cycle_counts = (uint16_t) ((current_period_counts * blowerPWM) / 100);
+             uint16_t duty_cycle_counts = (uint16_t) ((current_period_counts * blowerPWM) / 1000);
               /* Set the calculated duty cycle. */
-             //err = R_TAU_PWM_Stop(&g_timer0_ctrl);
              err = R_TAU_PWM_DutyCycleSet(&g_timer0_ctrl, duty_cycle_counts, TAU_PWM_IO_PIN_CHANNEL_5);
-             //         assert(FSP_SUCCESS == err)
-             //err = R_TAU_PWM_Start(&g_timer0_ctrl);
-
-
-//             sprintf(msg, "$P%d\n", blowerPWM);
-//             SendString(msg, (uint16_t)strlen(msg), StripZeros, NoAddCRLF);
           }
           break;
       default:

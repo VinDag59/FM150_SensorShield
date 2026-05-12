@@ -68,25 +68,25 @@
 20004000      440       4e     2 __ram_from_flash$$
 20004000      440        0     1         __ram_from_flash$$Base = .
 20004000      440        0     1         __ram_from_flash$$Load = LOADADDR ( __ram_from_flash$$ )
-20004000      440        1     1         ./src/hal_entry.o:(.data.blowerPWM)
-20004000      440        1     1                 blowerPWM
-20004001      441        1     1         ./src/hal_entry.o:(.data.i2c_event)
-20004001      441        1     1                 i2c_event
-20004002      442       3b     1         ./src/hal_entry.o:(.data..L_MergedGlobals)
-20004002      442        1     1                 nozzleNo
-20004003      443        1     1                 keyCode
-20004004      444        1     1                 currentTempF
-20004005      445        1     1                 currentHum
-20004006      446        1     1                 noBytestoRW
-20004007      447        1     1                 hw_reset_ADC
-20004008      448        1     1                 hw_startADC
-20004009      449        2     1                 spiCmdGetBarometricPressure
-2000400b      44b        2     1                 hw_readEEPROM_ADC_Comp
-2000400d      44d        2     1                 hw_setupADC
-2000400f      44f        3     1                 spiCmdStartSingle
-20004012      452        7     1                 spiCmdReadValue
-20004019      459        8     1                 readEEpromValues
-20004021      461       1c     1                 testPacket
+20004000      440        2     2         ./src/hal_entry.o:(.data.blowerPWM)
+20004000      440        2     1                 blowerPWM
+20004002      442        1     1         ./src/hal_entry.o:(.data.i2c_event)
+20004002      442        1     1                 i2c_event
+20004003      443       3b     1         ./src/hal_entry.o:(.data..L_MergedGlobals)
+20004003      443        1     1                 nozzleNo
+20004004      444        1     1                 keyCode
+20004005      445        1     1                 currentTempF
+20004006      446        1     1                 currentHum
+20004007      447        1     1                 noBytestoRW
+20004008      448        1     1                 hw_reset_ADC
+20004009      449        1     1                 hw_startADC
+2000400a      44a        2     1                 spiCmdGetBarometricPressure
+2000400c      44c        2     1                 hw_readEEPROM_ADC_Comp
+2000400e      44e        2     1                 hw_setupADC
+20004010      450        3     1                 spiCmdStartSingle
+20004013      453        7     1                 spiCmdReadValue
+2000401a      45a        8     1                 readEEpromValues
+20004022      462       1c     1                 testPacket
 2000403e      47e        4     2         ./ra_gen/hal_data.o:(.data.g_uart0_baud_setting)
 2000403e      47e        4     1                 g_uart0_baud_setting
 20004042      482        2     2         ./Modules/Serial_ASCII/Serial_user.o:(.data.streamIntervalDelay)
@@ -215,7 +215,7 @@
 200048e8 200048e8        0     1         __ram_thread_stack$$Limit = .
 20004a00 20004a00        0     1 .ram.endof
 20004a00 20004a00        0     1         __ddsc_RAM_END = .
-     490      490     497a     8 __flash_readonly$$
+     490      490     498a     8 __flash_readonly$$
      490      490        0     1         __flash_readonly$$Base = .
      490      490       12     2         ./src/SensorFunctions.o:(.text.InitSensor)
      490      490        0     1                 $t.0
@@ -465,233 +465,233 @@
     20d8     20d8        0     1                 $t.0
     20d9     20d9       18     1                 ScanKeyboard
     20ec     20ec        0     1                 $d.1
-    20f0     20f0      114     4         ./Modules/SimpleKeyboard/SimpleKeyboard_User.o:(.text.ProcessKeyCode)
+    20f0     20f0      11c     4         ./Modules/SimpleKeyboard/SimpleKeyboard_User.o:(.text.ProcessKeyCode)
     20f0     20f0        0     1                 $t.2
-    20f1     20f1      114     1                 ProcessKeyCode
-    21e8     21e8        0     1                 $d.3
-    2204     2204       78     2         ./Modules/Serial_ASCII/ASCII_numbers.o:(.text.ConvertASCII2UINT16)
-    2204     2204        0     1                 $t.0
-    2205     2205       78     1                 ConvertASCII2UINT16
-    227c     227c       c8     4         ./Modules/Serial_ASCII/Serial.o:(.text.SendString)
-    227c     227c        0     1                 $t.0
-    227d     227d       c8     1                 SendString
-    233c     233c        0     1                 $d.1
-    2344     2344       14     4         ./Modules/Serial_ASCII/Serial.o:(.text.RxBufferEmpty)
-    2344     2344        0     1                 $t.4
-    2345     2345       14     1                 RxBufferEmpty
-    2354     2354        0     1                 $d.5
-    2358     2358       9c     4         ./Modules/Serial_ASCII/Serial.o:(.text.UartA_CB)
-    2358     2358        0     1                 $t.6
-    2359     2359       9c     1                 UartA_CB
-    23ec     23ec        0     1                 $d.7
-    23f4     23f4       60     4         ./Modules/Serial_ASCII/Serial_user.o:(.text.ProcessReceiveBuffer)
-    23f4     23f4        0     1                 $t.0
-    23f5     23f5       60     1                 ProcessReceiveBuffer
-    2448     2448        0     1                 $d.1
-    2454     2454      404     4         ./Modules/Serial_ASCII/Serial_user.o:(.text.ProcessPacket)
-    2454     2454        0     1                 $t.2
-    2455     2455      404     1                 ProcessPacket
-    27d8     27d8        0     1                 $d.3
-    2858     2858       8c     4         ./Modules/Scheduler/Scheduler.o:(.text.SysTick_Handler)
-    2858     2858        0     1                 $t.0
-    2859     2859       8c     1                 SysTick_Handler
-    28d8     28d8        0     1                 $d.1
-    28e4     28e4       2c     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_picolib_inittls.c.o):(.text._init_tls)
-    28e4     28e4        0     1                 $t.0
-    28e5     28e5       2c     1                 _init_tls
-    2900     2900        0     1                 $d.1
-    2910     2910       14     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_picolib_machine_arm_tls.c.o):(.text._set_tls)
-    2910     2910        0     1                 $t.0
-    2911     2911       14     1                 _set_tls
-    291c     291c        0     1                 $d.1
-    2924     2924       4c     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_sprintf.c.o):(.text.sprintf)
-    2924     2924        0     1                 $t.0
-    2925     2925       4c     1                 sprintf
-    2968     2968        0     1                 $d.1
-    2970     2970       10     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_filestrput.c.o):(.text.__file_str_put)
-    2970     2970        0     1                 $t.0
-    2971     2971       10     1                 __file_str_put
-    2980     2980      b0c     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.text.vfprintf)
+    20f1     20f1      11c     1                 ProcessKeyCode
+    21f0     21f0        0     1                 $d.3
+    220c     220c       78     2         ./Modules/Serial_ASCII/ASCII_numbers.o:(.text.ConvertASCII2UINT16)
+    220c     220c        0     1                 $t.0
+    220d     220d       78     1                 ConvertASCII2UINT16
+    2284     2284       c8     4         ./Modules/Serial_ASCII/Serial.o:(.text.SendString)
+    2284     2284        0     1                 $t.0
+    2285     2285       c8     1                 SendString
+    2344     2344        0     1                 $d.1
+    234c     234c       14     4         ./Modules/Serial_ASCII/Serial.o:(.text.RxBufferEmpty)
+    234c     234c        0     1                 $t.4
+    234d     234d       14     1                 RxBufferEmpty
+    235c     235c        0     1                 $d.5
+    2360     2360       9c     4         ./Modules/Serial_ASCII/Serial.o:(.text.UartA_CB)
+    2360     2360        0     1                 $t.6
+    2361     2361       9c     1                 UartA_CB
+    23f4     23f4        0     1                 $d.7
+    23fc     23fc       60     4         ./Modules/Serial_ASCII/Serial_user.o:(.text.ProcessReceiveBuffer)
+    23fc     23fc        0     1                 $t.0
+    23fd     23fd       60     1                 ProcessReceiveBuffer
+    2450     2450        0     1                 $d.1
+    245c     245c      40c     4         ./Modules/Serial_ASCII/Serial_user.o:(.text.ProcessPacket)
+    245c     245c        0     1                 $t.2
+    245d     245d      40c     1                 ProcessPacket
+    27e8     27e8        0     1                 $d.3
+    2868     2868       8c     4         ./Modules/Scheduler/Scheduler.o:(.text.SysTick_Handler)
+    2868     2868        0     1                 $t.0
+    2869     2869       8c     1                 SysTick_Handler
+    28e8     28e8        0     1                 $d.1
+    28f4     28f4       2c     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_picolib_inittls.c.o):(.text._init_tls)
+    28f4     28f4        0     1                 $t.0
+    28f5     28f5       2c     1                 _init_tls
+    2910     2910        0     1                 $d.1
+    2920     2920       14     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_picolib_machine_arm_tls.c.o):(.text._set_tls)
+    2920     2920        0     1                 $t.0
+    2921     2921       14     1                 _set_tls
+    292c     292c        0     1                 $d.1
+    2934     2934       4c     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_sprintf.c.o):(.text.sprintf)
+    2934     2934        0     1                 $t.0
+    2935     2935       4c     1                 sprintf
+    2978     2978        0     1                 $d.1
+    2980     2980       10     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_filestrput.c.o):(.text.__file_str_put)
     2980     2980        0     1                 $t.0
-    2981     2981      b0c     1                 vfprintf
-    2981     2981      b0c     1                 __d_vfprintf
-    2a20     2a20        0     1                 $d.1
-    2a48     2a48        0     1                 $t.2
-    2c44     2c44        0     1                 $d.3
-    2c60     2c60        0     1                 $t.4
-    2c78     2c78        0     1                 $d.5
-    2c7c     2c7c        0     1                 $t.6
-    30d4     30d4        0     1                 $d.7
-    30d8     30d8        0     1                 $t.8
-    3100     3100        0     1                 $d.9
-    3114     3114        0     1                 $t.10
-    3480     3480        0     1                 $d.11
-    348c     348c      158     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.text.skip_to_arg)
-    348c     348c        0     1                 $t.12
-    348d     348d      158     1                 skip_to_arg
-    35e0     35e0        0     1                 $d.13
-    35e4     35e4       5a     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.text.__ultoa_invert)
-    35e4     35e4        0     1                 $t.14
-    35e5     35e5       5a     1                 __ultoa_invert
-    3640     3640      154     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_dtox_engine.c.o):(.text.__dtox_engine)
-    3640     3640        0     1                 $t.0
-    3641     3641      154     1                 __dtox_engine
-    378c     378c        0     1                 $d.1
-    3794     3794       1e     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_string_strnlen.c.o):(.text.strnlen)
-    3794     3794        0     1                 $t.0
-    3795     3795       1e     1                 strnlen
-    37b4     37b4      4a4     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.text.__dtoa_engine)
-    37b4     37b4        0     1                 $t.0
-    37b5     37b5      4a4     1                 __dtoa_engine
-    3b7c     3b7c        0     1                 $d.1
-    3b88     3b88        0     1                 $t.2
-    3c58     3c58       12     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.text.div10)
-    3c58     3c58        0     1                 $t.3
-    3c59     3c59       12     1                 div10
-    3c6c     3c6c       20     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.text.umulh)
-    3c6c     3c6c        0     1                 $t.4
-    3c6d     3c6d       20     1                 umulh
-    3c84     3c84        0     1                 $d.5
-    3c8c     3c8c      216     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.text.mulShiftAll64)
-    3c8c     3c8c        0     1                 $t.6
-    3c8d     3c8d      216     1                 mulShiftAll64
-    3ea2     3ea2       26     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.text.decimalLength17)
-    3ea2     3ea2        0     1                 $t.7
-    3ea3     3ea3       26     1                 decimalLength17
-    3ec8     3ec8        c     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_log10.c.o):(.text.__log10Pow2)
-    3ec8     3ec8        0     1                 $t.0
-    3ec9     3ec9        c     1                 __log10Pow2
-    3ed0     3ed0        0     1                 $d.1
-    3ed4     3ed4        c     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_log10.c.o):(.text.__log10Pow5)
-    3ed4     3ed4        0     1                 $t.2
-    3ed5     3ed5        c     1                 __log10Pow5
-    3edc     3edc        0     1                 $d.3
-    3ee0     3ee0       10     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_pow5bits.c.o):(.text.__pow5bits)
-    3ee0     3ee0        0     1                 $t.0
-    3ee1     3ee1       10     1                 __pow5bits
-    3eec     3eec        0     1                 $d.1
-    3ef0     3ef0       34     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.text.__pow5Factor)
+    2981     2981       10     1                 __file_str_put
+    2990     2990      b0c     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.text.vfprintf)
+    2990     2990        0     1                 $t.0
+    2991     2991      b0c     1                 vfprintf
+    2991     2991      b0c     1                 __d_vfprintf
+    2a30     2a30        0     1                 $d.1
+    2a58     2a58        0     1                 $t.2
+    2c54     2c54        0     1                 $d.3
+    2c70     2c70        0     1                 $t.4
+    2c88     2c88        0     1                 $d.5
+    2c8c     2c8c        0     1                 $t.6
+    30e4     30e4        0     1                 $d.7
+    30e8     30e8        0     1                 $t.8
+    3110     3110        0     1                 $d.9
+    3124     3124        0     1                 $t.10
+    3490     3490        0     1                 $d.11
+    349c     349c      158     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.text.skip_to_arg)
+    349c     349c        0     1                 $t.12
+    349d     349d      158     1                 skip_to_arg
+    35f0     35f0        0     1                 $d.13
+    35f4     35f4       5a     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.text.__ultoa_invert)
+    35f4     35f4        0     1                 $t.14
+    35f5     35f5       5a     1                 __ultoa_invert
+    3650     3650      154     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_dtox_engine.c.o):(.text.__dtox_engine)
+    3650     3650        0     1                 $t.0
+    3651     3651      154     1                 __dtox_engine
+    379c     379c        0     1                 $d.1
+    37a4     37a4       1e     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_string_strnlen.c.o):(.text.strnlen)
+    37a4     37a4        0     1                 $t.0
+    37a5     37a5       1e     1                 strnlen
+    37c4     37c4      4a4     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.text.__dtoa_engine)
+    37c4     37c4        0     1                 $t.0
+    37c5     37c5      4a4     1                 __dtoa_engine
+    3b8c     3b8c        0     1                 $d.1
+    3b98     3b98        0     1                 $t.2
+    3c68     3c68       12     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.text.div10)
+    3c68     3c68        0     1                 $t.3
+    3c69     3c69       12     1                 div10
+    3c7c     3c7c       20     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.text.umulh)
+    3c7c     3c7c        0     1                 $t.4
+    3c7d     3c7d       20     1                 umulh
+    3c94     3c94        0     1                 $d.5
+    3c9c     3c9c      216     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.text.mulShiftAll64)
+    3c9c     3c9c        0     1                 $t.6
+    3c9d     3c9d      216     1                 mulShiftAll64
+    3eb2     3eb2       26     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.text.decimalLength17)
+    3eb2     3eb2        0     1                 $t.7
+    3eb3     3eb3       26     1                 decimalLength17
+    3ed8     3ed8        c     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_log10.c.o):(.text.__log10Pow2)
+    3ed8     3ed8        0     1                 $t.0
+    3ed9     3ed9        c     1                 __log10Pow2
+    3ee0     3ee0        0     1                 $d.1
+    3ee4     3ee4        c     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_log10.c.o):(.text.__log10Pow5)
+    3ee4     3ee4        0     1                 $t.2
+    3ee5     3ee5        c     1                 __log10Pow5
+    3eec     3eec        0     1                 $d.3
+    3ef0     3ef0       10     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_pow5bits.c.o):(.text.__pow5bits)
     3ef0     3ef0        0     1                 $t.0
-    3ef1     3ef1       34     1                 __pow5Factor
-    3f14     3f14        0     1                 $d.1
-    3f24     3f24       f8     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.text.__double_computePow5)
-    3f24     3f24        0     1                 $t.2
-    3f25     3f25       f8     1                 __double_computePow5
-    4010     4010        0     1                 $d.3
-    401c     401c       fc     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.text.__double_computeInvPow5)
-    401c     401c        0     1                 $t.4
-    401d     401d       fc     1                 __double_computeInvPow5
-    410c     410c        0     1                 $d.5
-    4118     4118       6c     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_umul128.c.o):(.text.__umul128)
-    4118     4118        0     1                 $t.0
-    4119     4119       6c     1                 __umul128
-    4184     4184       28     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_umul128.c.o):(.text.__shiftright128)
-    4184     4184        0     1                 $t.1
-    4185     4185       28     1                 __shiftright128
-    41ac     41ac        e     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(bzero.c.o):(.text.bzero)
-    41ac     41ac        0     1                 $t.0
-    41ad     41ad        e     1                 bzero
-    41ad     41ad        e     1                 __aeabi_memclr4
-    41ad     41ad        e     1                 __aeabi_memclr8
-    41ad     41ad        e     1                 __aeabi_memclr
-    41ba     41ba       14     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(memcpy.c.o):(.text.memcpy)
-    41ba     41ba        0     1                 $t.0
-    41bb     41bb       14     1                 memcpy
-    41bb     41bb       14     1                 __aeabi_memcpy4
-    41bb     41bb       14     1                 __aeabi_memcpy8
-    41bb     41bb       14     1                 __aeabi_memcpy
-    41ce     41ce        e     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(memset.c.o):(.text.memset)
-    41ce     41ce        0     1                 $t.0
-    41cf     41cf        e     1                 memset
-    41dc     41dc        e     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(strlen.S.o):(.text)
-    41dc     41dc        0     1                 $t.0
-    41dd     41dd        e     1                 strlen
-    41ec     41ec      1a2     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libclang_rt.builtins.a(udivsi3.S.obj):(.text)
+    3ef1     3ef1       10     1                 __pow5bits
+    3efc     3efc        0     1                 $d.1
+    3f00     3f00       34     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.text.__pow5Factor)
+    3f00     3f00        0     1                 $t.0
+    3f01     3f01       34     1                 __pow5Factor
+    3f24     3f24        0     1                 $d.1
+    3f34     3f34       f8     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.text.__double_computePow5)
+    3f34     3f34        0     1                 $t.2
+    3f35     3f35       f8     1                 __double_computePow5
+    4020     4020        0     1                 $d.3
+    402c     402c       fc     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.text.__double_computeInvPow5)
+    402c     402c        0     1                 $t.4
+    402d     402d       fc     1                 __double_computeInvPow5
+    411c     411c        0     1                 $d.5
+    4128     4128       6c     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_umul128.c.o):(.text.__umul128)
+    4128     4128        0     1                 $t.0
+    4129     4129       6c     1                 __umul128
+    4194     4194       28     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_umul128.c.o):(.text.__shiftright128)
+    4194     4194        0     1                 $t.1
+    4195     4195       28     1                 __shiftright128
+    41bc     41bc        e     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(bzero.c.o):(.text.bzero)
+    41bc     41bc        0     1                 $t.0
+    41bd     41bd        e     1                 bzero
+    41bd     41bd        e     1                 __aeabi_memclr4
+    41bd     41bd        e     1                 __aeabi_memclr8
+    41bd     41bd        e     1                 __aeabi_memclr
+    41ca     41ca       14     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(memcpy.c.o):(.text.memcpy)
+    41ca     41ca        0     1                 $t.0
+    41cb     41cb       14     1                 memcpy
+    41cb     41cb       14     1                 __aeabi_memcpy4
+    41cb     41cb       14     1                 __aeabi_memcpy8
+    41cb     41cb       14     1                 __aeabi_memcpy
+    41de     41de        e     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(memset.c.o):(.text.memset)
+    41de     41de        0     1                 $t.0
+    41df     41df        e     1                 memset
+    41ec     41ec        e     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(strlen.S.o):(.text)
     41ec     41ec        0     1                 $t.0
-    41ed     41ed      1a2     1                 __aeabi_uidiv
-    41ed     41ed      1a2     1                 __udivsi3
-    438e     438e       2e     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libclang_rt.builtins.a(ashldi3.c.obj):(.text.__ashldi3)
-    438e     438e        0     1                 $t.0
-    438f     438f       2e     1                 __ashldi3
-    438f     438f       2e     1                 __aeabi_llsl
-    43bc     43bc       5c     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libclang_rt.builtins.a(clzsi2.c.obj):(.text.__clzsi2)
-    43bc     43bc        0     1                 $t.0
-    43bd     43bd       5c     1                 __clzsi2
-    4418     4418       2e     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libclang_rt.builtins.a(lshrdi3.c.obj):(.text.__lshrdi3)
-    4418     4418        0     1                 $t.0
-    4419     4419       2e     1                 __lshrdi3
-    4419     4419       2e     1                 __aeabi_llsr
-    4446     4446       34     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libclang_rt.builtins.a(muldi3.c.obj):(.text.__muldi3)
-    4446     4446        0     1                 $t.0
-    4447     4447       34     1                 __muldi3
-    4447     4447       34     1                 __aeabi_lmul
-    447a     447a        2     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libclang_rt.builtins.a(aeabi_div0.c.obj):(.text.__aeabi_idiv0)
-    447a     447a        0     1                 $t.0
-    447b     447b        2     1                 __aeabi_idiv0
-    447c     447c       14     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libclang_rt.builtins.a(aeabi_uldivmod.S.obj):(.text)
-    447c     447c        0     1                 $t.0
-    447d     447d       14     1                 __aeabi_uldivmod
-    4490     4490      2b0     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libclang_rt.builtins.a(udivmoddi4.c.obj):(.text.__udivmoddi4)
-    4490     4490        0     1                 $t.0
-    4491     4491      2b0     1                 __udivmoddi4
-    471c     471c        0     1                 $d.1
-    4740     4740       28     4         ./src/hal_entry.o:(.rodata.initValues0)
-    4740     4740       28     1                 initValues0
-    4768     4768       2c     4         ./src/hal_entry.o:(.rodata.initValues0Int32)
-    4768     4768       2c     1                 initValues0Int32
-    4794     4794       28     4         ./src/hal_entry.o:(.rodata.initSeValues0)
-    4794     4794       28     1                 initSeValues0
-    47bc     47bc        2     1         ./src/hal_entry.o:(.rodata.cmdRead)
-    47bc     47bc        2     1                 cmdRead
-    47be     47be       dc     1         <internal>:(.rodata.str1.1)
-    489a     489a        8     2         ./ra_gen/hal_data.o:(.rodata.g_timer_channel_cfg5)
-    489a     489a        8     1                 g_timer_channel_cfg5
-    48a4     48a4        8     4         ./ra_gen/hal_data.o:(.rodata.g_timer0_extend)
-    48a4     48a4        8     1                 g_timer0_extend
-    48ac     48ac       20     4         ./ra_gen/hal_data.o:(.rodata.g_timer0_cfg)
-    48ac     48ac       20     1                 g_timer0_cfg
-    48cc     48cc       18     4         ./ra_gen/hal_data.o:(.rodata.g_spi0_cfg_extend)
-    48cc     48cc       18     1                 g_spi0_cfg_extend
-    48e4     48e4       24     4         ./ra_gen/hal_data.o:(.rodata.g_spi0_cfg)
-    48e4     48e4       24     1                 g_spi0_cfg
-    4908     4908       14     4         ./ra_gen/hal_data.o:(.rodata.g_iica_master0_extend)
-    4908     4908       14     1                 g_iica_master0_extend
-    491c     491c       28     4         ./ra_gen/hal_data.o:(.rodata.g_iica_master0_cfg)
-    491c     491c       28     1                 g_iica_master0_cfg
-    4944     4944        8     4         ./ra_gen/hal_data.o:(.rodata.g_uart0_cfg_extend)
-    4944     4944        8     1                 g_uart0_cfg_extend
-    494c     494c       20     4         ./ra_gen/hal_data.o:(.rodata.g_uart0_cfg)
-    494c     494c       20     1                 g_uart0_cfg
-    496c     496c       e8     4         ./ra_gen/pin_data.o:(.rodata.g_bsp_pin_cfg_data)
-    496c     496c       e8     1                 g_bsp_pin_cfg_data
-    4a54     4a54        c     4         ./ra_gen/pin_data.o:(.rodata.g_bsp_pin_cfg)
-    4a54     4a54        c     1                 g_bsp_pin_cfg
-    4a60     4a60        4     1         <internal>:(.rodata.cst4)
-    4a64     4a64        8     1         <internal>:(.rodata.cst8)
-    4a6c     4a6c       14     4         ./Modules/SimpleKeyboard/SimpleKeyboard_User.o:(.rodata..L__const.ProcessKeyCode.msg)
-    4a80     4a80      33c     8         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.rodata)
-    4a80     4a80       d0     1                 DOUBLE_POW5_SPLIT2
-    4b50     4b50       d0     1                 DOUBLE_POW5_TABLE
-    4c20     4c20       54     1                 POW5_OFFSETS
-    4c78     4c78       f0     1                 DOUBLE_POW5_INV_SPLIT2
-    4d68     4d68       54     1                 POW5_INV_OFFSETS
-    4dbc     4dbc       4e     4         ./ra/fsp/src/bsp/mcu/all/bsp_common.o:(.version)
-    4dbc     4dbc        4     1                 g_fsp_version
-    4dc0     4dc0        6     1                 g_fsp_version_string
-    4dc6     4dc6       44     1                 g_fsp_version_build_string
-    4e0a     4e0a        0     1         __flash_readonly$$Limit = .
-    4e0a     4e0a        0     1 __flash_preinit_array$$
-    4e0a     4e0a        0     1         __preinit_array_start = .
-    4e0a     4e0a        0     1         __preinit_array_end = .
-    4e0a     4e0a        0     1 __flash_init_array$$
-    4e0a     4e0a        0     1         __init_array_start = .
-    4e0a     4e0a        0     1         __init_array_end = .
-    4e0a     4e0a        0     1 __flash_fini_array$$
-    4e0a     4e0a        0     1         __fini_array_start = .
-    4e0a     4e0a        0     1         __fini_array_end = .
-    4e0a     4e0a        0     1 __flash_arm.exidx$$
-    4e0a     4e0a        0     1         __exidx_start = .
-    4e0a     4e0a        0     1         __exidx_end = .
+    41ed     41ed        e     1                 strlen
+    41fc     41fc      1a2     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libclang_rt.builtins.a(udivsi3.S.obj):(.text)
+    41fc     41fc        0     1                 $t.0
+    41fd     41fd      1a2     1                 __aeabi_uidiv
+    41fd     41fd      1a2     1                 __udivsi3
+    439e     439e       2e     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libclang_rt.builtins.a(ashldi3.c.obj):(.text.__ashldi3)
+    439e     439e        0     1                 $t.0
+    439f     439f       2e     1                 __ashldi3
+    439f     439f       2e     1                 __aeabi_llsl
+    43cc     43cc       5c     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libclang_rt.builtins.a(clzsi2.c.obj):(.text.__clzsi2)
+    43cc     43cc        0     1                 $t.0
+    43cd     43cd       5c     1                 __clzsi2
+    4428     4428       2e     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libclang_rt.builtins.a(lshrdi3.c.obj):(.text.__lshrdi3)
+    4428     4428        0     1                 $t.0
+    4429     4429       2e     1                 __lshrdi3
+    4429     4429       2e     1                 __aeabi_llsr
+    4456     4456       34     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libclang_rt.builtins.a(muldi3.c.obj):(.text.__muldi3)
+    4456     4456        0     1                 $t.0
+    4457     4457       34     1                 __muldi3
+    4457     4457       34     1                 __aeabi_lmul
+    448a     448a        2     2         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libclang_rt.builtins.a(aeabi_div0.c.obj):(.text.__aeabi_idiv0)
+    448a     448a        0     1                 $t.0
+    448b     448b        2     1                 __aeabi_idiv0
+    448c     448c       14     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libclang_rt.builtins.a(aeabi_uldivmod.S.obj):(.text)
+    448c     448c        0     1                 $t.0
+    448d     448d       14     1                 __aeabi_uldivmod
+    44a0     44a0      2b0     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libclang_rt.builtins.a(udivmoddi4.c.obj):(.text.__udivmoddi4)
+    44a0     44a0        0     1                 $t.0
+    44a1     44a1      2b0     1                 __udivmoddi4
+    472c     472c        0     1                 $d.1
+    4750     4750       28     4         ./src/hal_entry.o:(.rodata.initValues0)
+    4750     4750       28     1                 initValues0
+    4778     4778       2c     4         ./src/hal_entry.o:(.rodata.initValues0Int32)
+    4778     4778       2c     1                 initValues0Int32
+    47a4     47a4       28     4         ./src/hal_entry.o:(.rodata.initSeValues0)
+    47a4     47a4       28     1                 initSeValues0
+    47cc     47cc        2     1         ./src/hal_entry.o:(.rodata.cmdRead)
+    47cc     47cc        2     1                 cmdRead
+    47ce     47ce       dc     1         <internal>:(.rodata.str1.1)
+    48aa     48aa        8     2         ./ra_gen/hal_data.o:(.rodata.g_timer_channel_cfg5)
+    48aa     48aa        8     1                 g_timer_channel_cfg5
+    48b4     48b4        8     4         ./ra_gen/hal_data.o:(.rodata.g_timer0_extend)
+    48b4     48b4        8     1                 g_timer0_extend
+    48bc     48bc       20     4         ./ra_gen/hal_data.o:(.rodata.g_timer0_cfg)
+    48bc     48bc       20     1                 g_timer0_cfg
+    48dc     48dc       18     4         ./ra_gen/hal_data.o:(.rodata.g_spi0_cfg_extend)
+    48dc     48dc       18     1                 g_spi0_cfg_extend
+    48f4     48f4       24     4         ./ra_gen/hal_data.o:(.rodata.g_spi0_cfg)
+    48f4     48f4       24     1                 g_spi0_cfg
+    4918     4918       14     4         ./ra_gen/hal_data.o:(.rodata.g_iica_master0_extend)
+    4918     4918       14     1                 g_iica_master0_extend
+    492c     492c       28     4         ./ra_gen/hal_data.o:(.rodata.g_iica_master0_cfg)
+    492c     492c       28     1                 g_iica_master0_cfg
+    4954     4954        8     4         ./ra_gen/hal_data.o:(.rodata.g_uart0_cfg_extend)
+    4954     4954        8     1                 g_uart0_cfg_extend
+    495c     495c       20     4         ./ra_gen/hal_data.o:(.rodata.g_uart0_cfg)
+    495c     495c       20     1                 g_uart0_cfg
+    497c     497c       e8     4         ./ra_gen/pin_data.o:(.rodata.g_bsp_pin_cfg_data)
+    497c     497c       e8     1                 g_bsp_pin_cfg_data
+    4a64     4a64        c     4         ./ra_gen/pin_data.o:(.rodata.g_bsp_pin_cfg)
+    4a64     4a64        c     1                 g_bsp_pin_cfg
+    4a70     4a70        4     1         <internal>:(.rodata.cst4)
+    4a74     4a74        8     1         <internal>:(.rodata.cst8)
+    4a7c     4a7c       14     4         ./Modules/SimpleKeyboard/SimpleKeyboard_User.o:(.rodata..L__const.ProcessKeyCode.msg)
+    4a90     4a90      33c     8         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.rodata)
+    4a90     4a90       d0     1                 DOUBLE_POW5_SPLIT2
+    4b60     4b60       d0     1                 DOUBLE_POW5_TABLE
+    4c30     4c30       54     1                 POW5_OFFSETS
+    4c88     4c88       f0     1                 DOUBLE_POW5_INV_SPLIT2
+    4d78     4d78       54     1                 POW5_INV_OFFSETS
+    4dcc     4dcc       4e     4         ./ra/fsp/src/bsp/mcu/all/bsp_common.o:(.version)
+    4dcc     4dcc        4     1                 g_fsp_version
+    4dd0     4dd0        6     1                 g_fsp_version_string
+    4dd6     4dd6       44     1                 g_fsp_version_build_string
+    4e1a     4e1a        0     1         __flash_readonly$$Limit = .
+    4e1a     4e1a        0     1 __flash_preinit_array$$
+    4e1a     4e1a        0     1         __preinit_array_start = .
+    4e1a     4e1a        0     1         __preinit_array_end = .
+    4e1a     4e1a        0     1 __flash_init_array$$
+    4e1a     4e1a        0     1         __init_array_start = .
+    4e1a     4e1a        0     1         __init_array_end = .
+    4e1a     4e1a        0     1 __flash_fini_array$$
+    4e1a     4e1a        0     1         __fini_array_start = .
+    4e1a     4e1a        0     1         __fini_array_end = .
+    4e1a     4e1a        0     1 __flash_arm.exidx$$
+    4e1a     4e1a        0     1         __exidx_start = .
+    4e1a     4e1a        0     1         __exidx_end = .
     5000     5000        0     1 .flash.endof
     5000     5000        0     1         __ddsc_FLASH_END = .
      400      400        0     1 .option_setting_ofs0.startof
@@ -1029,7 +1029,7 @@
     133c     133c       30     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(bzero.c.o):(.debug_frame)
     136c     136c       34     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(memcpy.c.o):(.debug_frame)
     13a0     13a0       24     4         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(memset.c.o):(.debug_frame)
-       0        0     68e9     1 .debug_line
+       0        0     68f1     1 .debug_line
        0        0      28f     1         ./src/SensorFunctions.o:(.debug_line)
      28f      28f      79a     1         ./src/hal_entry.o:(.debug_line)
      a29      a29       f8     1         ./ra_gen/common_data.o:(.debug_line)
@@ -1056,29 +1056,29 @@
     3de3     3de3       6e     1         ./ra/board/ra0e1_fpb/board_init.o:(.debug_line)
     3e51     3e51       a7     1         ./ra/board/ra0e1_fpb/board_leds.o:(.debug_line)
     3ef8     3ef8       e3     1         ./Modules/SimpleKeyboard/SimpleKeyboard.o:(.debug_line)
-    3fdb     3fdb      1d6     1         ./Modules/SimpleKeyboard/SimpleKeyboard_User.o:(.debug_line)
-    41b1     41b1      165     1         ./Modules/Serial_ASCII/ASCII_numbers.o:(.debug_line)
-    4316     4316      29a     1         ./Modules/Serial_ASCII/Serial.o:(.debug_line)
-    45b0     45b0      380     1         ./Modules/Serial_ASCII/Serial_user.o:(.debug_line)
-    4930     4930      14a     1         ./Modules/Scheduler/Scheduler.o:(.debug_line)
-    4a7a     4a7a       43     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_errno_errno.c.o):(.debug_line)
-    4abd     4abd       9c     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_picolib_inittls.c.o):(.debug_line)
-    4b59     4b59       ad     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_picolib_machine_arm_tls.c.o):(.debug_line)
-    4c06     4c06       45     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_picolib_machine_arm_read_tp.S.o):(.debug_line)
-    4c4b     4c4b       fa     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_sprintf.c.o):(.debug_line)
-    4d45     4d45       e3     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_filestrput.c.o):(.debug_line)
-    4e28     4e28      b00     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.debug_line)
-    5928     5928      1d9     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_dtox_engine.c.o):(.debug_line)
-    5b01     5b01       91     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_string_strnlen.c.o):(.debug_line)
-    5b92     5b92      709     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.debug_line)
-    629b     629b       b3     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_log10.c.o):(.debug_line)
-    634e     634e       97     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_pow5bits.c.o):(.debug_line)
-    63e5     63e5      213     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.debug_line)
-    65f8     65f8       dd     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_umul128.c.o):(.debug_line)
-    66d5     66d5       8c     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(bzero.c.o):(.debug_line)
-    6761     6761       9f     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(memcpy.c.o):(.debug_line)
-    6800     6800       9a     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(memset.c.o):(.debug_line)
-    689a     689a       4f     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(strlen.S.o):(.debug_line)
+    3fdb     3fdb      1d9     1         ./Modules/SimpleKeyboard/SimpleKeyboard_User.o:(.debug_line)
+    41b4     41b4      165     1         ./Modules/Serial_ASCII/ASCII_numbers.o:(.debug_line)
+    4319     4319      29a     1         ./Modules/Serial_ASCII/Serial.o:(.debug_line)
+    45b3     45b3      385     1         ./Modules/Serial_ASCII/Serial_user.o:(.debug_line)
+    4938     4938      14a     1         ./Modules/Scheduler/Scheduler.o:(.debug_line)
+    4a82     4a82       43     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_errno_errno.c.o):(.debug_line)
+    4ac5     4ac5       9c     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_picolib_inittls.c.o):(.debug_line)
+    4b61     4b61       ad     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_picolib_machine_arm_tls.c.o):(.debug_line)
+    4c0e     4c0e       45     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_picolib_machine_arm_read_tp.S.o):(.debug_line)
+    4c53     4c53       fa     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_sprintf.c.o):(.debug_line)
+    4d4d     4d4d       e3     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_filestrput.c.o):(.debug_line)
+    4e30     4e30      b00     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.debug_line)
+    5930     5930      1d9     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_dtox_engine.c.o):(.debug_line)
+    5b09     5b09       91     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_string_strnlen.c.o):(.debug_line)
+    5b9a     5b9a      709     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.debug_line)
+    62a3     62a3       b3     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_log10.c.o):(.debug_line)
+    6356     6356       97     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_pow5bits.c.o):(.debug_line)
+    63ed     63ed      213     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.debug_line)
+    6600     6600       dd     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(libc_tinystdio_ryu_umul128.c.o):(.debug_line)
+    66dd     66dd       8c     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(bzero.c.o):(.debug_line)
+    6769     6769       9f     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(memcpy.c.o):(.debug_line)
+    6808     6808       9a     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(memset.c.o):(.debug_line)
+    68a2     68a2       4f     1         C:\Renesas\e2_studio_25_10\toolchains\llvm_arm\LLVM-ET-Arm-18.1.3-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv6m_soft_nofp_exn_rtti\lib\libc.a(strlen.S.o):(.debug_line)
        0        0     1690     1 .debug_line_str
        0        0     1690     1         <internal>:(.debug_line_str)
        0        0       40     1 .debug_aranges
