@@ -98,7 +98,7 @@
     <node id="board.clock.loco.freq" option="board.clock.loco.freq.32768"/>
     <node id="board.clock.iclk.source" option="board.clock.iclk.source.hoco"/>
     <node id="board.clock.iclk.display" option="board.clock.iclk.display.value"/>
-    <node id="board.clock.tau.ck00.div" option="board.clock.tau.ck00.div.512"/>
+    <node id="board.clock.tau.ck00.div" option="board.clock.tau.ck00.div.1"/>
     <node id="board.clock.tau.ck00.display" option="board.clock.tau.ck00.display.value"/>
     <node id="board.clock.tau.ck01.div" option="board.clock.tau.ck01.div.1"/>
     <node id="board.clock.tau.ck01.display" option="board.clock.tau.ck01.display.value"/>

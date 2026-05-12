@@ -63,7 +63,7 @@ FSP Configuration
     HOCO Div /1
     MOCO Div /1
     ICLK Src: HOCO
-    TAU CK00 Div /512
+    TAU CK00 Div /1
     TAU CK01 Div /1
     TAU CK02 Div /2
     TAU CK03 Div /256

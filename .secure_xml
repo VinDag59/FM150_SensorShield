@@ -26,7 +26,7 @@
     <node id="board.clock.loco.freq" option="board.clock.loco.freq.32768"/>
     <node id="board.clock.iclk.source" option="board.clock.iclk.source.hoco"/>
     <node id="board.clock.iclk.display" option="board.clock.iclk.display.value"/>
-    <node id="board.clock.tau.ck00.div" option="board.clock.tau.ck00.div.512"/>
+    <node id="board.clock.tau.ck00.div" option="board.clock.tau.ck00.div.1"/>
     <node id="board.clock.tau.ck00.display" option="board.clock.tau.ck00.display.value"/>
     <node id="board.clock.tau.ck01.div" option="board.clock.tau.ck01.div.1"/>
     <node id="board.clock.tau.ck01.display" option="board.clock.tau.ck01.display.value"/>
@@ -111,9 +111,9 @@
       <configSetting altId="p407.gpio_mode.gpio_mode_peripheral" configurationId="p407.gpio_mode"/>
       <configSetting altId="p913.gpio_mode.gpio_mode_peripheral" configurationId="p913.gpio_mode"/>
       <configSetting altId="p914.gpio_mode.gpio_mode_peripheral" configurationId="p914.gpio_mode"/>
-      <configSetting altId="sau_spi11.sck11.p407" configurationId="sau_spi11.sck11" isUsedByDriver="true" peripheral="SAU_SPI11"/>
-      <configSetting altId="sau_spi11.si11.p212" configurationId="sau_spi11.si11" isUsedByDriver="true" peripheral="SAU_SPI11"/>
-      <configSetting altId="sau_spi11.so11.p213" configurationId="sau_spi11.so11" isUsedByDriver="true" peripheral="SAU_SPI11"/>
+      <configSetting altId="sau_spi11.sck11.p407" configurationId="sau_spi11.sck11" peripheral="SAU_SPI11"/>
+      <configSetting altId="sau_spi11.si11.p212" configurationId="sau_spi11.si11" peripheral="SAU_SPI11"/>
+      <configSetting altId="sau_spi11.so11.p213" configurationId="sau_spi11.so11" peripheral="SAU_SPI11"/>
       <configSetting altId="system.res.p206" configurationId="system.res" peripheral="SYSTEM"/>
       <configSetting altId="system.vrefh0.p010" configurationId="system.vrefh0" peripheral="SYSTEM"/>
       <configSetting altId="tau05.to05.p201" configurationId="tau05.to05" isUsedByDriver="true" peripheral="TAU05"/>

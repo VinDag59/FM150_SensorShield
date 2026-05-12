@@ -150,7 +150,7 @@ uint8_t ProcessPacket(void)
         // units for blower PWM (blowerPWM) are 0.1%, so, 400 = 40%
         errorCode = ConvertASCII2UINT16((char*)&packetBuffer[PARAMETER_START_LOCATION], 5, '\n', &tempValue);
         if ((tempValue >= 400) && (tempValue <= 980)) {
-            blowerPWM = (uint8_t)tempValue;
+            blowerPWM = tempValue;
 
            // change the value of the PWM
            /* Get the current period setting. */
