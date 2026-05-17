@@ -39,6 +39,6 @@ extern uint8_t nextSerialRx2Proc;
 uint8_t SendString(const char * _msg, uint16_t _len, strip_zeros _supressZeros, add_CRLF _add_crlf);
 uint16_t CheckBuffer(void);
 uint8_t RxBufferEmpty(void);
-
+uint8_t AddChecksum(char * _msg, uint16_t _len, uint16_t _arr_size);
 
 #endif

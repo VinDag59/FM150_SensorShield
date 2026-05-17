@@ -128,9 +128,9 @@ uint8_t ProcessPacket(void)
     // each command has intentional fall-thru for upper/lower case
     case 's':     // s = turn streaming on/off for a report
     case 'S':
-        if (packetBuffer[PARAMETER_START_LOCATION] == 1) {
+        if (packetBuffer[PARAMETER_START_LOCATION] == '1') {
             streaming = true;
-            streamReport = packetBuffer[PARAMETER_START_LOCATION + 1] - '0';
+            streamReport = packetBuffer[PARAMETER_START_LOCATION + 1];// - '0';
         }
         else {
             streaming = false;
@@ -198,24 +198,29 @@ uint8_t ProcessPacket(void)
         switch (packetBuffer[PARAMETER_START_LOCATION]) {
             case '0':
                 sprintf(message, "$v0%d\n", pressureSensorBarometer.data.average);
+                AddChecksum(message, (uint16_t)strlen(message), sizeof(message));
                 SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
                 break;
             case '1':
                 sprintf(message, "$v1%d\n", pressureSensor1.data.average);
+                AddChecksum(message, (uint16_t)strlen(message), sizeof(message));
                 SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
                 break;
             case '2':
                 sprintf(message, "$v1%d\n", pressureSensor2.data.average);
+                AddChecksum(message, (uint16_t)strlen(message), sizeof(message));
                 SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
                 break;
             case '3':
                 break;
             case '4':
                 sprintf(message, "$v4%d\n", temperatureSensor.data.average);
+                AddChecksum(message, (uint16_t)strlen(message), sizeof(message));
                 SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
                 break;
             case '5':
                 sprintf(message, "$v5%d\n", humiditySensor.data.average);
+                AddChecksum(message, (uint16_t)strlen(message), sizeof(message));
                 SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
                 break;
         }
@@ -274,6 +279,9 @@ uint8_t ProcessPacket(void)
                 break;
         }
         break;
+    case 'f':
+        SendString(FW_REV_PACKET_BUILT, (uint16_t)strlen(FW_REV_PACKET_BUILT), StripZeros, NoAddCRLF);
+        break;
     }
 
     processPacket = false;
@@ -281,3 +289,62 @@ uint8_t ProcessPacket(void)
     return errorCode;
 }
 
+
+uint8_t AddChecksum(char * _msg, uint16_t _len, uint16_t _arr_size)
+{
+    uint8_t status = 0;
+    uint8_t i = 0;
+    uint8_t chk = 0;
+    char chk_str[3] = "";
+
+    if (_msg != 0) {
+        while ( (_msg[i] != '\n') && (_msg[i] != 0) && (i < _len) ) {
+        chk ^= _msg[i];
+        i++;
+        }
+        if ( (_msg[i] != 0) && (i < _arr_size - 4) ) {
+            sprintf(chk_str, "%X", chk);
+            _msg[i++] = '!';
+            _msg[i++] = chk_str[0];
+            _msg[i++] = chk_str[1];
+            _msg[i] = '\n';
+        }
+        else {
+            status = 1;
+        }
+    }
+    else {
+        status = 2;
+    }
+
+    return status;
+}
+
+
+
+uint8_t CheckChecksum(char * _msg, uint16_t _len, uint16_t _arr_size)
+{
+    uint8_t status = 0;
+    uint8_t i = 0;
+    uint8_t chk = 0;
+    char chk_str[3] = "";
+
+    if (_msg != 0) {
+        while ( (_msg[i] != '\n') && (_msg[i] != 0) && (_msg[i] != '!') && (i < _arr_size) ) {
+        chk ^= _msg[i];
+        i++;
+        }
+
+        if ( (_msg[i] == '!') && (i < _arr_size - 2) ) {
+            sprintf(chk_str, "%X", chk);
+            if ( (_msg[i+1] != chk_str[0]) || (_msg[i+2] != chk_str[1]) ) {
+                status = 1;;
+            }
+        }
+    }
+    else {
+        status = 2;
+    }
+
+    return status;
+}

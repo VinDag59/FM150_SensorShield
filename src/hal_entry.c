@@ -374,8 +374,8 @@ void hal_entry (void)
                               /0xFFFF));
                       break;
                   case 3:
-                      AddSensorInt16Value(&temperatureSensor, currentTempF);
-                      AddSensorInt16Value(&humiditySensor, currentHum);
+                      AddSensorInt16Value(&temperatureSensor, currentTempF * 10);
+                      AddSensorInt16Value(&humiditySensor, currentHum * 10);
                       getTempHum = false;
                       getTempHumState = 0;
                       break;
