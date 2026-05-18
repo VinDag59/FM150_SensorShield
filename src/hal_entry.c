@@ -706,6 +706,11 @@ void hal_entry (void)
                         sprintf(msg_str, "$r1%d:%d:%d\n", pressureSensor1.data.rawData[pressureSensor1.data.nextValue], temperatureSensor.data.average, nozzleNo);
                         SendString(msg_str, (uint16_t)strlen(msg_str), NoStripZeros, NoAddCRLF);
                         break;
+                    case '3':    // Stream report 3 gives the average pressure1, average temperature, average humidity, and Average Barometer
+                        sprintf(msg_str, "$r3%d:%d:%d:%d\n", pressureSensor1.data.average, temperatureSensor.data.average, humiditySensor.data.average, pressureSensorBarometer.data.average);
+                        AddChecksum(msg_str, (uint16_t)strlen(msg_str), sizeof(msg_str));
+                        SendString(msg_str, (uint16_t)strlen(msg_str), NoStripZeros, NoAddCRLF);
+                        break;
                 }
             }
         }

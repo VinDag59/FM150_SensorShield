@@ -169,14 +169,22 @@ uint8_t ProcessPacket(void)
         switch (packetBuffer[PARAMETER_START_LOCATION]) {
             case '0':    // report 0 gives the average pressure, average temperature, and average humidity
                 sprintf(message, "$r0%d:%d:%d\n", pressureSensor1.data.average, temperatureSensor.data.average, humiditySensor.data.average);
+                AddChecksum(message, (uint16_t)strlen(message), sizeof(message));
                 SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
                 break;
             case '1':    // report 1 gives the oldest pressure, average temperature, and nozzle number
                 sprintf(message, "$r1%d:%d:%d\n", pressureSensor1.data.rawData[pressureSensor1.data.nextValue], temperatureSensor.data.average, nozzleNo);
+                AddChecksum(message, (uint16_t)strlen(message), sizeof(message));
                 SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
                 break;
             case '2':    // report 1 gives the oldest pressure, average temperature, and nozzle number
                 sprintf(message, "$r2%d:%d:%d:%d\n", pressureSensor1.data.rawData[pressureSensor1.data.nextValue], temperatureSensor.data.average, humiditySensor.data.average, pressureSensorBarometer.data.average);
+                AddChecksum(message, (uint16_t)strlen(message), sizeof(message));
+                SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
+                break;
+            case '3':    // report 3 gives the average pressure1, average temperature, average humidity, and Average Barometer
+                sprintf(message, "$r3%d:%d:%d:%d\n", pressureSensor1.data.average, temperatureSensor.data.average, humiditySensor.data.average, pressureSensorBarometer.data.average);
+                AddChecksum(message, (uint16_t)strlen(message), sizeof(message));
                 SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
                 break;
         }
