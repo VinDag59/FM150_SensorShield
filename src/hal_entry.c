@@ -104,6 +104,7 @@ void sau_spi_callback(spi_callback_args_t *p_args);
     uint8_t spiCmdReadValue[7] = {0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     volatile uint8_t sampleData_DLHR_1 = false;
     volatile uint8_t sampleData_DLHR_2 = false;
+    volatile uint8_t sampleData_DLHR_3 = false;
     spi_cfg_t dlhr_spi0_cfg;
     sau_spi_extended_cfg_t dlhr_spi0_ext_cfg;
     // Barometric Sensor
@@ -490,6 +491,59 @@ void hal_entry (void)
           }
 
 
+          if (sampleData_DLHR_3 == true) {
+              switch (sensorSampleState) {
+                  case 0:
+                      status = R_SAU_SPI_Close(&g_spi0_ctrl);
+                      //if ((status != FSP_SUCCESS) && (status != FSP_ERR_NOT_OPEN)) while(1);
+                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &dlhr_spi0_cfg);
+                      //if (status != FSP_SUCCESS) while(1);
+                      sensorSampleState++;
+                      break;
+                  case 1:
+                      SENSOR_3_SS = SS_ASSERTED;
+                      busBusy_SPI = true;
+                      sensorSampleState++;
+                      break;
+                  case 2:
+                      status = R_SAU_SPI_Write(&g_spi0_ctrl, spiCmdStartSingle, 3, SPI_BIT_WIDTH_8_BITS);
+                      sensorSampleState++;
+                      break;
+                  case 3:
+                      SENSOR_3_SS = SS_DEASSERTED;
+                      sensorSampleState++;
+                      break;
+                  case 4:
+                      SENSOR_3_SS = SS_ASSERTED;
+                      sensorSampleState++;
+                      break;
+                  case 5:
+                      status = R_SAU_SPI_WriteRead(&g_spi0_ctrl, spiCmdReadValue, spiReadSensorData, 7, SPI_BIT_WIDTH_8_BITS);
+                      sensorSampleState++;
+                      break;
+                  case 6:
+                      SENSOR_3_SS = SS_DEASSERTED;
+                      sensorSampleState++;
+                      break;
+                  case 7:
+                      AddSensorInt32Value(&pressureSensor3, (spiReadSensorData[1] << 16) + (spiReadSensorData[2] << 8) + spiReadSensorData[3]);
+                      sensorSampleState++;
+                      break;
+                  case 8:
+                      status = R_SAU_SPI_Close(&g_spi0_ctrl);
+                      //if ((status != FSP_SUCCESS) && (status != FSP_ERR_NOT_OPEN)) while(1);
+                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &g_spi0_cfg);
+                      //if (status != FSP_SUCCESS) while(1);
+                      sampleData_DLHR_3 = false;
+                      busBusy_SPI = false;
+                      sensorSampleState = 0;
+                      break;
+                  default:
+                      break;
+              }
+          }
+
+
           if (sampleData_Barometer == true) {
               switch (sensorSampleState) {
                   case 0:
@@ -534,67 +588,67 @@ void hal_entry (void)
           }
 
 
-          if (sampleData_HW == true) {
-              switch (sensorSampleState) {
-                  case 0:
-                      busBusy_SPI = true;
-                      status = R_SAU_SPI_Close(&g_spi0_ctrl);
-                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &hw_spi0_cfg);
-                      sensorSampleState++;
-                      break;
-                  case 1:
-                      SENSOR_3_SS = SS_ASSERTED;
-                      sensorSampleState++;
-                      break;
-                  case 2:
-                      status = R_SAU_SPI_Write(&g_spi0_ctrl, hw_setupADC, 2, SPI_BIT_WIDTH_8_BITS);
-                      sensorSampleState++;
-                      break;
-                  case 3: SENSOR_3_SS = SS_DEASSERTED;
-                      sensorSampleState++;
-                      break;
-                  case 4:
-                  case 5: // intentional fall through - 60mS delay
-                  case 6:
-                  case 7:
-                      sensorSampleState++;
-                      break;
-                  case 8:
-                      SENSOR_3_SS = SS_ASSERTED;
-                      sensorSampleState++;
-                      break;
-                  case 9:
-                      status = R_SAU_SPI_Write(&g_spi0_ctrl, hw_startADC, 1, SPI_BIT_WIDTH_8_BITS);
-                      sensorSampleState++;
-                      break;
-                  case 10:
-                      SENSOR_3_SS = SS_DEASSERTED;
-                      sensorSampleState++;
-                      break;
-                  case 11:
-                  case 12:
-                  case 13:
-                  case 14:
-                      sensorSampleState++;
-                      break;
-                  case 15:
-                      status = R_SAU_SPI_WriteRead(&g_spi0_ctrl, spiCmdGetBarometricPressure, spiReadSensorData, 4, SPI_BIT_WIDTH_8_BITS);
-                      sensorSampleState++;
-                      break;
-                  case 16: // put the data somewhere.
-                      sensorSampleState++;
-                      break;
-                  case 17:
-                      status = R_SAU_SPI_Close(&g_spi0_ctrl);
-                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &g_spi0_cfg);
-                      sensorSampleState = 0;
-                      sampleData_HW = false;
-                      busBusy_SPI = false;
-                      break;
-                  default:
-                      break;
-              }
-          }
+//          if (sampleData_HW == true) {
+//              switch (sensorSampleState) {
+//                  case 0:
+//                      busBusy_SPI = true;
+//                      status = R_SAU_SPI_Close(&g_spi0_ctrl);
+//                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &hw_spi0_cfg);
+//                      sensorSampleState++;
+//                      break;
+//                  case 1:
+//                      SENSOR_3_SS = SS_ASSERTED;
+//                      sensorSampleState++;
+//                      break;
+//                  case 2:
+//                      status = R_SAU_SPI_Write(&g_spi0_ctrl, hw_setupADC, 2, SPI_BIT_WIDTH_8_BITS);
+//                      sensorSampleState++;
+//                      break;
+//                  case 3: SENSOR_3_SS = SS_DEASSERTED;
+//                      sensorSampleState++;
+//                      break;
+//                  case 4:
+//                  case 5: // intentional fall through - 60mS delay
+//                  case 6:
+//                  case 7:
+//                      sensorSampleState++;
+//                      break;
+//                  case 8:
+//                      SENSOR_3_SS = SS_ASSERTED;
+//                      sensorSampleState++;
+//                      break;
+//                  case 9:
+//                      status = R_SAU_SPI_Write(&g_spi0_ctrl, hw_startADC, 1, SPI_BIT_WIDTH_8_BITS);
+//                      sensorSampleState++;
+//                      break;
+//                  case 10:
+//                      SENSOR_3_SS = SS_DEASSERTED;
+//                      sensorSampleState++;
+//                      break;
+//                  case 11:
+//                  case 12:
+//                  case 13:
+//                  case 14:
+//                      sensorSampleState++;
+//                      break;
+//                  case 15:
+//                      status = R_SAU_SPI_WriteRead(&g_spi0_ctrl, spiCmdGetBarometricPressure, spiReadSensorData, 4, SPI_BIT_WIDTH_8_BITS);
+//                      sensorSampleState++;
+//                      break;
+//                  case 16: // put the data somewhere.
+//                      sensorSampleState++;
+//                      break;
+//                  case 17:
+//                      status = R_SAU_SPI_Close(&g_spi0_ctrl);
+//                      status = R_SAU_SPI_Open(&g_spi0_ctrl, &g_spi0_cfg);
+//                      sensorSampleState = 0;
+//                      sampleData_HW = false;
+//                      busBusy_SPI = false;
+//                      break;
+//                  default:
+//                      break;
+//              }
+//          }
 
         }  // end of 10mS Tasks
         //---------------------------------
@@ -640,6 +694,7 @@ void hal_entry (void)
                       //SendString("1", (uint16_t)1, StripZeros, AddCRLF);
                       break;
                   case 2:  // Sensor 3
+                      sampleData_DLHR_3 = true;
                       //sampleData_HW = true;
                       sensorSelectState = 3;
                       //SendString("2", (uint16_t)1, StripZeros, AddCRLF);
