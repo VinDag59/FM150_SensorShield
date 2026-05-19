@@ -187,6 +187,11 @@ uint8_t ProcessPacket(void)
                 AddChecksum(message, (uint16_t)strlen(message), sizeof(message));
                 SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
                 break;
+            case '4':    // report 4 gives the average pressure1-2-3, average temperature, average humidity, and Average Barometer
+                sprintf(message, "$r4%d:%d:%d:%d:%d:%d\n", pressureSensor1.data.average, pressureSensor2.data.average, pressureSensor3.data.average, temperatureSensor.data.average, humiditySensor.data.average, pressureSensorBarometer.data.average);
+                AddChecksum(message, (uint16_t)strlen(message), sizeof(message));
+                SendString(message, (uint16_t)strlen(message), NoStripZeros, NoAddCRLF);
+                break;
         }
         break;
     case 'b':     // b = check switch (button) press

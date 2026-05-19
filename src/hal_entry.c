@@ -766,6 +766,11 @@ void hal_entry (void)
                         AddChecksum(msg_str, (uint16_t)strlen(msg_str), sizeof(msg_str));
                         SendString(msg_str, (uint16_t)strlen(msg_str), NoStripZeros, NoAddCRLF);
                         break;
+                    case '4':    // report 4 gives the average pressure1-2-3, average temperature, average humidity, and Average Barometer
+                        sprintf(msg_str, "$r4%d:%d:%d:%d:%d:%d\n", pressureSensor1.data.average, pressureSensor2.data.average, pressureSensor3.data.average, temperatureSensor.data.average, humiditySensor.data.average, pressureSensorBarometer.data.average);
+                        AddChecksum(msg_str, (uint16_t)strlen(msg_str), sizeof(msg_str));
+                        SendString(msg_str, (uint16_t)strlen(msg_str), NoStripZeros, NoAddCRLF);
+                        break;
                 }
             }
         }
